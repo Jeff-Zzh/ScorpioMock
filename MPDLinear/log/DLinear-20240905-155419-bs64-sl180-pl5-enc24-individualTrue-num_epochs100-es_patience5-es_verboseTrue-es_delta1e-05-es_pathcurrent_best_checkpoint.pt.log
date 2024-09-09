@@ -1,0 +1,22 @@
+2024-09-05 15:54:19,653 - Epoch 1/100, Train Loss(MSE): 0.6758518942764827, Validation Loss(MSE): 0.4159141480922699
+2024-09-05 15:54:19,653 - Validation loss decreased for the first time. Saving model ...
+2024-09-05 15:54:19,735 - Epoch 2/100, Train Loss(MSE): 0.346992022224835, Validation Loss(MSE): 0.2739630838235219
+2024-09-05 15:54:19,736 - Validation loss decreased (0.415914 --> 0.273963).  Saving model ...
+2024-09-05 15:54:19,815 - Epoch 3/100, Train Loss(MSE): 0.27192077679293497, Validation Loss(MSE): 0.2629176676273346
+2024-09-05 15:54:19,815 - Validation loss decreased (0.273963 --> 0.262918).  Saving model ...
+2024-09-05 15:54:19,872 - Epoch 4/100, Train Loss(MSE): 0.2636106191646485, Validation Loss(MSE): 0.2638593713442485
+2024-09-05 15:54:19,872 - EarlyStopping counter: 1 out of 5
+2024-09-05 15:54:19,930 - Epoch 5/100, Train Loss(MSE): 0.26034508716492427, Validation Loss(MSE): 0.26665903131167096
+2024-09-05 15:54:19,930 - EarlyStopping counter: 2 out of 5
+2024-09-05 15:54:20,011 - Epoch 6/100, Train Loss(MSE): 0.2626739264953704, Validation Loss(MSE): 0.26788636048634845
+2024-09-05 15:54:20,011 - EarlyStopping counter: 3 out of 5
+2024-09-05 15:54:20,081 - Epoch 7/100, Train Loss(MSE): 0.256066090294293, Validation Loss(MSE): 0.27161558469136554
+2024-09-05 15:54:20,081 - EarlyStopping counter: 4 out of 5
+2024-09-05 15:54:20,150 - Epoch 8/100, Train Loss(MSE): 0.25868359208106995, Validation Loss(MSE): 0.2740532159805298
+2024-09-05 15:54:20,150 - EarlyStopping counter: 5 out of 5
+2024-09-05 15:54:20,150 - Early stopping
+2024-09-05 15:54:20,150 - —µ¡∑ 8 ¥Œepoch£¨—µ¡∑ ±≥§: 0.5609288215637207 √Î
+2024-09-05 15:54:20,156 - Test Loss(MSE): 0.3066922227541606
+2024-09-05 15:54:20,157 - Model saved to D:\PythonProject\scorpioMock\MPDLinear\checkpoint\DLinear_20240905-155420_bs64_seq180_enc24_pred_len5_individualTrue_checkpoint.pth
+2024-09-05 15:54:20,164 - Test Loss (Original Scale) MSE: 37.76218226898755
+2024-09-05 15:54:20,164 - Test Loss (Original Scale) MAE: 4.867854978334612

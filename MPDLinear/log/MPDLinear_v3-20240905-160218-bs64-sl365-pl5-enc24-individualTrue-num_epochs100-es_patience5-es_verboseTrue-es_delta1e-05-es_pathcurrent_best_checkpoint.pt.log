@@ -1,0 +1,58 @@
+2024-09-05 16:02:18,405 - Epoch 1/100, Train Loss(MSE): 0.28742967859694835, Validation Loss(MSE): 0.11652213086684544
+2024-09-05 16:02:18,405 - Validation loss decreased for the first time. Saving model ...
+2024-09-05 16:02:18,643 - Epoch 2/100, Train Loss(MSE): 0.08052247429364606, Validation Loss(MSE): 0.07196049640576045
+2024-09-05 16:02:18,643 - Validation loss decreased (0.116522 --> 0.071960).  Saving model ...
+2024-09-05 16:02:18,856 - Epoch 3/100, Train Loss(MSE): 0.04236708836335885, Validation Loss(MSE): 0.06337607900301616
+2024-09-05 16:02:18,857 - Validation loss decreased (0.071960 --> 0.063376).  Saving model ...
+2024-09-05 16:02:19,079 - Epoch 4/100, Train Loss(MSE): 0.02982584328243607, Validation Loss(MSE): 0.05726142351826032
+2024-09-05 16:02:19,079 - Validation loss decreased (0.063376 --> 0.057261).  Saving model ...
+2024-09-05 16:02:19,291 - Epoch 5/100, Train Loss(MSE): 0.024705895565842326, Validation Loss(MSE): 0.05531060447295507
+2024-09-05 16:02:19,291 - Validation loss decreased (0.057261 --> 0.055311).  Saving model ...
+2024-09-05 16:02:19,482 - Epoch 6/100, Train Loss(MSE): 0.01896867396211938, Validation Loss(MSE): 0.053183632592360176
+2024-09-05 16:02:19,482 - Validation loss decreased (0.055311 --> 0.053184).  Saving model ...
+2024-09-05 16:02:19,711 - Epoch 7/100, Train Loss(MSE): 0.015789077862312918, Validation Loss(MSE): 0.05163047959407171
+2024-09-05 16:02:19,712 - Validation loss decreased (0.053184 --> 0.051630).  Saving model ...
+2024-09-05 16:02:19,917 - Epoch 8/100, Train Loss(MSE): 0.01284374022170117, Validation Loss(MSE): 0.052003211031357445
+2024-09-05 16:02:19,918 - EarlyStopping counter: 1 out of 5
+2024-09-05 16:02:20,140 - Epoch 9/100, Train Loss(MSE): 0.011074209169141556, Validation Loss(MSE): 0.051416331281264625
+2024-09-05 16:02:20,140 - Validation loss decreased (0.051630 --> 0.051416).  Saving model ...
+2024-09-05 16:02:20,340 - Epoch 10/100, Train Loss(MSE): 0.009013082023317876, Validation Loss(MSE): 0.0510321781039238
+2024-09-05 16:02:20,340 - Validation loss decreased (0.051416 --> 0.051032).  Saving model ...
+2024-09-05 16:02:20,556 - Epoch 11/100, Train Loss(MSE): 0.007688062682159637, Validation Loss(MSE): 0.05112005894382795
+2024-09-05 16:02:20,556 - EarlyStopping counter: 1 out of 5
+2024-09-05 16:02:20,760 - Epoch 12/100, Train Loss(MSE): 0.006483425312724553, Validation Loss(MSE): 0.05041273683309555
+2024-09-05 16:02:20,760 - Validation loss decreased (0.051032 --> 0.050413).  Saving model ...
+2024-09-05 16:02:20,957 - Epoch 13/100, Train Loss(MSE): 0.005478741368278861, Validation Loss(MSE): 0.05083754286170006
+2024-09-05 16:02:20,957 - EarlyStopping counter: 1 out of 5
+2024-09-05 16:02:21,191 - Epoch 14/100, Train Loss(MSE): 0.004547559840016459, Validation Loss(MSE): 0.050518378615379333
+2024-09-05 16:02:21,192 - EarlyStopping counter: 2 out of 5
+2024-09-05 16:02:21,390 - Epoch 15/100, Train Loss(MSE): 0.003805821896285603, Validation Loss(MSE): 0.05061285073558489
+2024-09-05 16:02:21,390 - EarlyStopping counter: 3 out of 5
+2024-09-05 16:02:21,588 - Epoch 16/100, Train Loss(MSE): 0.0031972303006209827, Validation Loss(MSE): 0.050569663445154824
+2024-09-05 16:02:21,588 - EarlyStopping counter: 4 out of 5
+2024-09-05 16:02:21,780 - Epoch 17/100, Train Loss(MSE): 0.002762833787863584, Validation Loss(MSE): 0.05033597722649574
+2024-09-05 16:02:21,780 - Validation loss decreased (0.050413 --> 0.050336).  Saving model ...
+2024-09-05 16:02:21,989 - Epoch 18/100, Train Loss(MSE): 0.0023696640641183444, Validation Loss(MSE): 0.05039102708299955
+2024-09-05 16:02:21,989 - EarlyStopping counter: 1 out of 5
+2024-09-05 16:02:22,191 - Epoch 19/100, Train Loss(MSE): 0.0020885151185977614, Validation Loss(MSE): 0.050564409544070564
+2024-09-05 16:02:22,191 - EarlyStopping counter: 2 out of 5
+2024-09-05 16:02:22,403 - Epoch 20/100, Train Loss(MSE): 0.001721421342441126, Validation Loss(MSE): 0.05005042130748431
+2024-09-05 16:02:22,403 - Validation loss decreased (0.050336 --> 0.050050).  Saving model ...
+2024-09-05 16:02:22,606 - Epoch 21/100, Train Loss(MSE): 0.0014891512446889752, Validation Loss(MSE): 0.04993348692854246
+2024-09-05 16:02:22,606 - Validation loss decreased (0.050050 --> 0.049933).  Saving model ...
+2024-09-05 16:02:22,807 - Epoch 22/100, Train Loss(MSE): 0.0012719184926122818, Validation Loss(MSE): 0.05008392656842867
+2024-09-05 16:02:22,807 - EarlyStopping counter: 1 out of 5
+2024-09-05 16:02:23,028 - Epoch 23/100, Train Loss(MSE): 0.0010618098649980599, Validation Loss(MSE): 0.05026475340127945
+2024-09-05 16:02:23,028 - EarlyStopping counter: 2 out of 5
+2024-09-05 16:02:23,226 - Epoch 24/100, Train Loss(MSE): 0.0009345426530528226, Validation Loss(MSE): 0.050276791055997215
+2024-09-05 16:02:23,226 - EarlyStopping counter: 3 out of 5
+2024-09-05 16:02:23,431 - Epoch 25/100, Train Loss(MSE): 0.0008178372916422392, Validation Loss(MSE): 0.050365086644887924
+2024-09-05 16:02:23,431 - EarlyStopping counter: 4 out of 5
+2024-09-05 16:02:23,630 - Epoch 26/100, Train Loss(MSE): 0.0007183092621792303, Validation Loss(MSE): 0.05046951770782471
+2024-09-05 16:02:23,630 - EarlyStopping counter: 5 out of 5
+2024-09-05 16:02:23,630 - Early stopping
+2024-09-05 16:02:23,630 - —µ¡∑ 26 ¥Œepoch£¨—µ¡∑ ±≥§: 5.481451511383057 √Î
+2024-09-05 16:02:23,646 - Test Loss(MSE): 0.0409210721651713
+2024-09-05 16:02:23,652 - Model saved to D:\PythonProject\scorpioMock\MPDLinear\checkpoint\MPDLinear_v3_20240905-160223_bs64_seq365_enc24_pred_len5_individualTrue_checkpoint.pth
+2024-09-05 16:02:23,665 - Test Loss (Original Scale) MSE: 4.826258192033746
+2024-09-05 16:02:23,665 - Test Loss (Original Scale) MAE: 1.6944184762434908

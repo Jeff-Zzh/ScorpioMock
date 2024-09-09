@@ -1,0 +1,42 @@
+2024-08-29 18:12:59,507 - Epoch 1/100, Train Loss(MSE): 0.15875429096254143, Validation Loss(MSE): 0.07426061779260636
+2024-08-29 18:12:59,507 - Validation loss decreased for the first time. Saving model ...
+2024-08-29 18:13:01,315 - Epoch 2/100, Train Loss(MSE): 0.041527281691496436, Validation Loss(MSE): 0.06878053545951843
+2024-08-29 18:13:01,320 - Validation loss decreased (0.074261 --> 0.068781).  Saving model ...
+2024-08-29 18:13:03,147 - Epoch 3/100, Train Loss(MSE): 0.026171668734703515, Validation Loss(MSE): 0.06525730118155479
+2024-08-29 18:13:03,147 - Validation loss decreased (0.068781 --> 0.065257).  Saving model ...
+2024-08-29 18:13:04,940 - Epoch 4/100, Train Loss(MSE): 0.01850743264563986, Validation Loss(MSE): 0.06149469316005707
+2024-08-29 18:13:04,940 - Validation loss decreased (0.065257 --> 0.061495).  Saving model ...
+2024-08-29 18:13:06,740 - Epoch 5/100, Train Loss(MSE): 0.012793694660570976, Validation Loss(MSE): 0.0604243203997612
+2024-08-29 18:13:06,740 - Validation loss decreased (0.061495 --> 0.060424).  Saving model ...
+2024-08-29 18:13:08,571 - Epoch 6/100, Train Loss(MSE): 0.009209741787934626, Validation Loss(MSE): 0.05697757676243782
+2024-08-29 18:13:08,571 - Validation loss decreased (0.060424 --> 0.056978).  Saving model ...
+2024-08-29 18:13:10,464 - Epoch 7/100, Train Loss(MSE): 0.007147661536126523, Validation Loss(MSE): 0.057158815860748294
+2024-08-29 18:13:10,464 - EarlyStopping counter: 1 out of 5
+2024-08-29 18:13:12,273 - Epoch 8/100, Train Loss(MSE): 0.005029232964876133, Validation Loss(MSE): 0.058535844832658765
+2024-08-29 18:13:12,273 - EarlyStopping counter: 2 out of 5
+2024-08-29 18:13:14,092 - Epoch 9/100, Train Loss(MSE): 0.0037162514038484645, Validation Loss(MSE): 0.05593389868736267
+2024-08-29 18:13:14,092 - Validation loss decreased (0.056978 --> 0.055934).  Saving model ...
+2024-08-29 18:13:16,049 - Epoch 10/100, Train Loss(MSE): 0.0028602593496592867, Validation Loss(MSE): 0.05648464635014534
+2024-08-29 18:13:16,050 - EarlyStopping counter: 1 out of 5
+2024-08-29 18:13:17,850 - Epoch 11/100, Train Loss(MSE): 0.002134394967248915, Validation Loss(MSE): 0.056182601302862165
+2024-08-29 18:13:17,850 - EarlyStopping counter: 2 out of 5
+2024-08-29 18:13:19,678 - Epoch 12/100, Train Loss(MSE): 0.0016938903859841663, Validation Loss(MSE): 0.05546496957540512
+2024-08-29 18:13:19,678 - Validation loss decreased (0.055934 --> 0.055465).  Saving model ...
+2024-08-29 18:13:21,469 - Epoch 13/100, Train Loss(MSE): 0.0012890638239253815, Validation Loss(MSE): 0.05486215204000473
+2024-08-29 18:13:21,469 - Validation loss decreased (0.055465 --> 0.054862).  Saving model ...
+2024-08-29 18:13:23,327 - Epoch 14/100, Train Loss(MSE): 0.0009826023141048044, Validation Loss(MSE): 0.055953793972730634
+2024-08-29 18:13:23,327 - EarlyStopping counter: 1 out of 5
+2024-08-29 18:13:25,114 - Epoch 15/100, Train Loss(MSE): 0.0007112001067316915, Validation Loss(MSE): 0.056674060970544816
+2024-08-29 18:13:25,114 - EarlyStopping counter: 2 out of 5
+2024-08-29 18:13:26,898 - Epoch 16/100, Train Loss(MSE): 0.0005775484880998831, Validation Loss(MSE): 0.05514193624258042
+2024-08-29 18:13:26,898 - EarlyStopping counter: 3 out of 5
+2024-08-29 18:13:28,691 - Epoch 17/100, Train Loss(MSE): 0.0005297313917843574, Validation Loss(MSE): 0.0556426152586937
+2024-08-29 18:13:28,691 - EarlyStopping counter: 4 out of 5
+2024-08-29 18:13:30,481 - Epoch 18/100, Train Loss(MSE): 0.00040958305219867945, Validation Loss(MSE): 0.05557424575090408
+2024-08-29 18:13:30,481 - EarlyStopping counter: 5 out of 5
+2024-08-29 18:13:30,482 - Early stopping
+2024-08-29 18:13:30,482 - —µ¡∑ 18 ¥Œepoch£¨—µ¡∑ ±≥§: 32.7742714881897 √Î
+2024-08-29 18:13:30,546 - Test Loss(MSE): 0.044640954956412314
+2024-08-29 18:13:30,555 - Model saved to D:\PythonProject\scorpioMock\MPDLinear\checkpoint\MPDLinear_20240829-181330_bs32_seq365_enc24_pred_len1_individualTrue_checkpoint.pth
+2024-08-29 18:13:30,612 - Test Loss (Original Scale) MSE: 5.489070445464365
+2024-08-29 18:13:30,612 - Test Loss (Original Scale) MAE: 1.8004320037633044

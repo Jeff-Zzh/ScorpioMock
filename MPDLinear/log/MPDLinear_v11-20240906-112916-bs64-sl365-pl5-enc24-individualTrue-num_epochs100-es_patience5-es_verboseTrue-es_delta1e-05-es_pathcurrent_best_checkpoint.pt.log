@@ -1,0 +1,22 @@
+2024-09-06 11:29:18,166 - Epoch 1/100, Train Loss(MSE): 0.2692819867087038, Validation Loss(MSE): 0.07782136276364326
+2024-09-06 11:29:18,166 - Validation loss decreased for the first time. Saving model ...
+2024-09-06 11:29:19,647 - Epoch 2/100, Train Loss(MSE): 0.049576819335159505, Validation Loss(MSE): 0.06666363403201103
+2024-09-06 11:29:19,651 - Validation loss decreased (0.077821 --> 0.066664).  Saving model ...
+2024-09-06 11:29:21,102 - Epoch 3/100, Train Loss(MSE): 0.03462644568399379, Validation Loss(MSE): 0.06146932144959768
+2024-09-06 11:29:21,102 - Validation loss decreased (0.066664 --> 0.061469).  Saving model ...
+2024-09-06 11:29:22,673 - Epoch 4/100, Train Loss(MSE): 0.02472388602205013, Validation Loss(MSE): 0.06689465045928955
+2024-09-06 11:29:22,673 - EarlyStopping counter: 1 out of 5
+2024-09-06 11:29:24,255 - Epoch 5/100, Train Loss(MSE): 0.019674159684463552, Validation Loss(MSE): 0.06308701634407043
+2024-09-06 11:29:24,256 - EarlyStopping counter: 2 out of 5
+2024-09-06 11:29:25,680 - Epoch 6/100, Train Loss(MSE): 0.015084873002610709, Validation Loss(MSE): 0.07338368892669678
+2024-09-06 11:29:25,680 - EarlyStopping counter: 3 out of 5
+2024-09-06 11:29:27,297 - Epoch 7/100, Train Loss(MSE): 0.012301625928988582, Validation Loss(MSE): 0.06486855571468671
+2024-09-06 11:29:27,297 - EarlyStopping counter: 4 out of 5
+2024-09-06 11:29:28,711 - Epoch 8/100, Train Loss(MSE): 0.00979067196481322, Validation Loss(MSE): 0.07038971781730652
+2024-09-06 11:29:28,711 - EarlyStopping counter: 5 out of 5
+2024-09-06 11:29:28,711 - Early stopping
+2024-09-06 11:29:28,711 - —µ¡∑ 8 ¥Œepoch£¨—µ¡∑ ±≥§: 12.04737114906311 √Î
+2024-09-06 11:29:28,771 - Test Loss(MSE): 0.038101072112719216
+2024-09-06 11:29:28,783 - Model saved to D:\PythonProject\scorpioMock\MPDLinear\checkpoint\MPDLinear_v11_20240906-112928_bs64_seq365_enc24_pred_len5_individualTrue_checkpoint.pth
+2024-09-06 11:29:28,835 - Test Loss (Original Scale) MSE: 4.957629866334718
+2024-09-06 11:29:28,835 - Test Loss (Original Scale) MAE: 1.77467006225309
