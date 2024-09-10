@@ -7,6 +7,7 @@ import torch.nn as nn
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.model_selection import train_test_split
 from torch.utils.data import TensorDataset, DataLoader
+from tqdm import tqdm
 
 from MPDLinear.data_process.data_visualization import draw_all
 from MPDLinear.model.MPDLinear_SOTA import MPDLinear_SOTA
@@ -211,11 +212,11 @@ print(config)
 # 训练模型
 train_start_time = time.time()
 end_epoch = 0 # 记录在哪一次epoch时结束了train（earlyStopping）
-for epoch in range(config.num_epochs):
+for epoch in tqdm(range(config.num_epochs), desc='Epochs'):
     end_epoch += 1
     model.train() # 设置模型为训练模式（启用Dropout和BatchNorm的训练行为）
     train_loss = 0.0  # 初始化训练损失
-    for inputs, targets in train_loader:
+    for inputs, targets in tqdm(train_loader, desc=f"Training Epoch {epoch + 1}", leave=False):
         optimizer.zero_grad() # 清空上一步的梯度信息
         # 将输入数据调整为 (batch_size, seq_len, num_features) 形状以适应模型
         # inputs.size(0): 获取 inputs 张量的第一个维度大小，这通常是批次大小（batch_size）。
@@ -252,7 +253,7 @@ for epoch in range(config.num_epochs):
     val_loss = 0.0 # 初始化验证损失
     # 禁用梯度计算，提高评估效率
     with torch.no_grad():
-        for inputs, targets in val_loader: # 遍历验证数据集的每一个批次
+        for inputs, targets in tqdm(val_loader, desc=f"Validation Epoch {epoch + 1}", leave=False):# 遍历验证数据集的每一个批次
             # 将输入数据调整为 (batch_size, seq_len, num_features) 形状以适应模型
             outputs = model(inputs.view(inputs.size(0), config.seq_len, -1))
             if config.pred_len == 1:

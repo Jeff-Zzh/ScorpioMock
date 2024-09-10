@@ -13,6 +13,7 @@ class ModelConfig:
         self.es_path = 'current_best_checkpoint.pt'
         self.decomposition_kernel_size = 25
         self.learning_rate = 0.001
+        self.scaling_method = 'standardization' # 缩放方法: 标准化/归一化
 
 
     def __str__(self):
@@ -29,7 +30,8 @@ class ModelConfig:
                 f"es_delta={self.es_delta}, "
                 f"es_path={self.es_path},"
                 f"decomposition_kernel_size={self.decomposition_kernel_size},"
-                f"learning_rate={self.learning_rate})")
+                f"learning_rate={self.learning_rate},"
+                f"scaling_method={self.scaling_method})")
 
     # @property
     # def batch_size(self):

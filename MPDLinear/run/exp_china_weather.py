@@ -23,7 +23,7 @@ from datetime import datetime
 from util.EarlyStopping import EarlyStopping
 from util.logger import setup_logger
 import matplotlib.pyplot as plt
-
+from tqdm import tqdm
 
 # 配置
 config = ModelConfig() # 初始化模型参数配置
@@ -56,7 +56,7 @@ feature_expand_data_chongqing = feature_expand_data_list[2]
 ####################选定数据集############################
 
 # 选择某一数据集(以avg_data_beijing为例)
-dataset_exp = avg_data_beijing
+dataset_exp = avg_data_chongqing
 
 # 查看基本信息
 print("\n实验所选数据集的 数据集基础信息：")
@@ -148,14 +148,15 @@ config.es_delta = 0.00001
 config.es_path = 'current_best_checkpoint.pt'
 config.decomposition_kernel_size = 25
 config.learning_rate = 0.001
+config.scaling_method = 'normalization' # 选择缩放方法 标准化/归一化
 
 
 # 构建模型输入输出 (用标准化的数据)
 # 合并标准化 或 归一化 后的特征和目标变量
-# 标准化后的特征和目标
-# data_prepared = np.column_stack((X_standardized, y_standardized))
-# 归一化后的特征和目标
-data_prepared = np.column_stack((X_normalized, y_normalized))
+if config.scaling_method == 'standardization': # 标准化后的特征和目标
+    data_prepared = np.column_stack((X_standardized, y_standardized))
+elif config.scaling_method == 'normalization':# 归一化后的特征和目标
+    data_prepared = np.column_stack((X_normalized, y_normalized))
 feature_dim_start_col = 0
 feature_dim_end_col = X.shape[1] - 1 # 从第1列到第倒数第二列都是feature
 target_dim_col = X.shape[1] # 最后一列是target列
@@ -221,11 +222,11 @@ print(config)
 # 训练模型
 train_start_time = time.time()
 end_epoch = 0 # 记录在哪一次epoch时结束了train（earlyStopping）
-for epoch in range(config.num_epochs):
+for epoch in tqdm(range(config.num_epochs), desc = "Epochs"):
     end_epoch += 1
     model.train() # 设置模型为训练模式（启用Dropout和BatchNorm的训练行为）
     train_loss = 0.0  # 初始化训练损失
-    for inputs, targets in train_loader:
+    for inputs, targets in tqdm(train_loader, desc=f"Training Epoch {epoch + 1}", leave=False):
         optimizer.zero_grad() # 清空上一步的梯度信息
         # 将输入数据调整为 (batch_size, seq_len, num_features) 形状以适应模型
         # inputs.size(0): 获取 inputs 张量的第一个维度大小，这通常是批次大小（batch_size）。
@@ -262,7 +263,9 @@ for epoch in range(config.num_epochs):
     val_loss = 0.0 # 初始化验证损失
     # 禁用梯度计算，提高评估效率
     with torch.no_grad():
-        for inputs, targets in val_loader: # 遍历验证数据集的每一个批次
+        # 遍历验证数据集的每一个批次
+        for inputs, targets in val_loader:
+        # for inputs, targets in tqdm(val_loader, desc=f"Validation Epoch {epoch + 1}", leave=False):
             # 将输入数据调整为 (batch_size, seq_len, num_features) 形状以适应模型
             outputs = model(inputs.view(inputs.size(0), config.seq_len, -1))
             if config.pred_len == 1:
@@ -280,7 +283,8 @@ for epoch in range(config.num_epochs):
 
     # 记录训练和验证损失到日志文件
     logger.info(f'Epoch {epoch + 1}/{config.num_epochs}, Train Loss(MSE): {train_loss}, Validation Loss(MSE): {val_loss}')
-    print(f'Epoch {epoch+1}/{config.num_epochs}, Train Loss: {train_loss}, Validation Loss: {val_loss}')
+    # print(f'Epoch {epoch+1}/{config.num_epochs}, Train Loss: {train_loss}, Validation Loss: {val_loss}')
+    tqdm.write(f'Epoch {epoch+1}/{config.num_epochs}, Train Loss: {train_loss}, Validation Loss: {val_loss}')
 
     # 检查是否应触发早停
     early_stopping(val_loss, model)
@@ -288,7 +292,8 @@ for epoch in range(config.num_epochs):
     # 如果早停条件满足，退出训练
     if early_stopping.early_stop:
         logger.info("Early stopping")
-        print("Early stopping")
+        # print("Early stopping")
+        tqdm.write("Early stopping")
         break
 train_end_time = time.time()
 train_cost_time = train_end_time - train_start_time
@@ -356,13 +361,19 @@ with torch.no_grad():
         predictions.extend(outputs.squeeze().cpu().numpy()) # 将每个批次的预测结果将 PyTorch 张量 转换为 NumPy 数组并添加到 predictions 列表中; 只有当张量在 CPU 上时，才能调用 numpy() 方法，因此先调用 cpu()
         # print(len(predictions)) prediction最终大小为一维数组，长度为测试集batch_size, 对应测试集每个batch的预测值
 
-# 反标准化预测值
+# 反标准化/反归一化预测值
 predictions = np.array(predictions)
 # 变为一个二维数组，其中每一行是一个预测值 [1,180] -> [180,1]
-predictions_original_scale = scaler_y.inverse_transform(predictions.reshape(-1, 1)).flatten() # 对预测值进行反标准化，将其从标准化后的尺度变换回原始尺度
+if config.scaling_method == 'standardization':
+    predictions_original_scale = scaler_y.inverse_transform(predictions.reshape(-1, 1)).flatten() # 对预测值进行反标准化，将其从标准化后的尺度变换回原始尺度
+elif config.scaling_method == 'normalization':
+    predictions_original_scale = scaler_y_minmax.inverse_transform(predictions.reshape(-1, 1)).flatten() # 对预测值进行反归一化，将其从归一化后的尺度变换回原始尺度
 
-# 反标准化真实值 [180,1]
-y_test_original_scale = scaler_y.inverse_transform(y_test.reshape(-1, 1)).flatten() # 对真实值进行反标准化
+# 反标准化/反归一化真实值 [180,1]
+if config.scaling_method == 'standardization':
+    y_test_original_scale = scaler_y.inverse_transform(y_test.reshape(-1, 1)).flatten() # 对真实值进行反标准化
+elif config.scaling_method == 'normalization':
+    y_test_original_scale = scaler_y_minmax.inverse_transform(y_test.reshape(-1, 1)).flatten() # 对真实值进行反归一化
 
 # 计算反标准化后的 测试集上的 预测值和真实值之间的均方误差MSE，MAE
 test_mse_loss_original_scale = mean_squared_error(y_test_original_scale, predictions_original_scale)
