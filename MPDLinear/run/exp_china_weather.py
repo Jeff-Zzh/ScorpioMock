@@ -12,7 +12,7 @@ from MPDLinear.data_process.data_visualization import draw_all
 from MPDLinear.model.MPDLinear_SOTA import MPDLinear_SOTA
 from MPDLinear.model.model_dict import ModelDict
 from MPDLinear.data_process.data_processor import preprocessing_data, load_data, clean_weather_and_save, \
-    divide_data_by_geographic, feature_engineering, windows_select_single_label
+    divide_data_by_geographic_and_save, feature_engineering, windows_select_single_label
 from MPDLinear.config.ModelConfig import ModelConfig
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
@@ -40,7 +40,7 @@ attributes = ['pressure', 'wind_speed', 'wind_direction', 'temperature', 'humidi
 # draw_all(cleaned_dataset, attributes)
 
 # 按地区，划分数据集
-beijing_data, shanghai_data, chongqing_data = divide_data_by_geographic()
+beijing_data, shanghai_data, chongqing_data = divide_data_by_geographic_and_save()
 geo_dataset_list = [beijing_data, shanghai_data, chongqing_data]
 
 # 特征工程
@@ -70,6 +70,7 @@ print(dataset_exp.isnull().sum())
 
 # 填充缺失值(将所有缺失值替换为它之前最近的一个非缺失值,将前向填充后仍然存在的缺失值替换为它之后最近的一个非缺失值)
 # 插值法利用数据的趋势和模式对缺失值进行填充，而前向填充和后向填充则确保了所有缺失值都能被有效填补。这样处理后的数据将更加完整，有助于提高后续数据分析和建模的准确性
+dataset_exp = dataset_exp.infer_objects(copy=False) # 在进行插值操作前，推断对象类型列为合适的类型
 dataset_exp.interpolate(method='linear', inplace=True)
 dataset_exp.fillna(method='ffill', inplace=True)
 dataset_exp.fillna(method='bfill', inplace=True)
@@ -149,7 +150,16 @@ config.es_path = 'current_best_checkpoint.pt'
 config.decomposition_kernel_size = 25
 config.learning_rate = 0.001
 config.scaling_method = 'normalization' # 选择缩放方法 标准化/归一化
+config.device = 'gpu'
 
+device = None # torch所用设备
+if config.device == 'gpu':
+# 检查是否有可用的 GPU，如果有则使用 GPU，否则使用 CPU
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"-----Using device: {device}-----")
+else:
+    device = torch.device('cpu')
+    print(f"-----Using device: {device}-----")
 
 # 构建模型输入输出 (用标准化的数据)
 # 合并标准化 或 归一化 后的特征和目标变量
@@ -178,13 +188,13 @@ print(f"训练集大小: {X_train.shape}, {y_train.shape}")
 print(f"验证集大小: {X_val.shape}, {y_val.shape}")
 print(f"测试集大小: {X_test.shape}, {y_test.shape}")
 
-# 数据转换，numpy的ndarray 转为 torch.Tensor 类型对象
-X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
-y_train_tensor = torch.tensor(y_train, dtype=torch.float32)
-X_val_tensor = torch.tensor(X_val, dtype=torch.float32)
-y_val_tensor = torch.tensor(y_val, dtype=torch.float32)
-X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
-y_test_tensor = torch.tensor(y_test, dtype=torch.float32)
+# 数据转换，numpy的ndarray 转为 torch.Tensor 类型对象, 并移动到 GPU 或 CPU
+X_train_tensor = torch.tensor(X_train, dtype=torch.float32).to(device)
+y_train_tensor = torch.tensor(y_train, dtype=torch.float32).to(device)
+X_val_tensor = torch.tensor(X_val, dtype=torch.float32).to(device)
+y_val_tensor = torch.tensor(y_val, dtype=torch.float32).to(device)
+X_test_tensor = torch.tensor(X_test, dtype=torch.float32).to(device)
+y_test_tensor = torch.tensor(y_test, dtype=torch.float32).to(device)
 
 # 创建训练集/验证集/测试集 数据集
 train_dataset = TensorDataset(X_train_tensor, y_train_tensor)
@@ -196,11 +206,11 @@ train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=T
 val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=config.batch_size, shuffle=False)
 
-# 定义选取模型
+# 定义选取模型，并移动到 GPU 或 CPU
 model_dict = ModelDict().get_model_dict()
-model = model_dict.get(config.model)(config)
+model = model_dict.get(config.model)(config).to(device)
 
-# 定义损失函数和优化器
+# 定义损失函数和优化器(在 CPU 和 GPU 上是通用的，MSELoss 和 Adam 优化器都可以正常在 GPU 上工作)
 criterion = nn.MSELoss() # 对于回归任务，用MSE损失函数
 optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate) # 学习率设置放在ModelConfig中
 
@@ -228,6 +238,7 @@ for epoch in tqdm(range(config.num_epochs), desc = "Epochs"):
     train_loss = 0.0  # 初始化训练损失
     for inputs, targets in tqdm(train_loader, desc=f"Training Epoch {epoch + 1}", leave=False):
         optimizer.zero_grad() # 清空上一步的梯度信息
+        inputs, targets = inputs.to(device), targets.to(device)  # 将数据移动到设备CPU 或 GPU
         # 将输入数据调整为 (batch_size, seq_len, num_features) 形状以适应模型
         # inputs.size(0): 获取 inputs 张量的第一个维度大小，这通常是批次大小（batch_size）。
         # config.seq_len: 表示时间序列的长度（即输入序列的长度）。
@@ -266,6 +277,7 @@ for epoch in tqdm(range(config.num_epochs), desc = "Epochs"):
         # 遍历验证数据集的每一个批次
         for inputs, targets in val_loader:
         # for inputs, targets in tqdm(val_loader, desc=f"Validation Epoch {epoch + 1}", leave=False):
+            inputs, targets = inputs.to(device), targets.to(device)  # 将数据移动到设备CPU 或 GPU
             # 将输入数据调整为 (batch_size, seq_len, num_features) 形状以适应模型
             outputs = model(inputs.view(inputs.size(0), config.seq_len, -1))
             if config.pred_len == 1:
@@ -308,6 +320,7 @@ model.eval()
 test_loss = 0.0
 with torch.no_grad():
     for inputs, targets in test_loader:
+        inputs, targets = inputs.to(device), targets.to(device)  # 将数据移动到设备CPU 或 GPU
         outputs = model(inputs.view(inputs.size(0), config.seq_len, -1))
         if config.pred_len == 1:
             # 输出方式2：使用每个batch中，所有channel输出的平均值
@@ -346,6 +359,7 @@ model.eval()  # 设置模型为评估模式
 predictions = [] # 装整个测试集的所有预测结果
 with torch.no_grad():
     for inputs, _ in test_loader:
+        inputs = inputs.to(device) # 将数据移动到设备CPU 或 GPU
         # 输入数据调整为 (batch_size, sequence_length, num_features) 形状以适应模型
         inputs = inputs.view(inputs.size(0), config.seq_len, -1)
         outputs = model(inputs) # 生成预测值：将输入数据传入模型进行前向传播，得到预测结果

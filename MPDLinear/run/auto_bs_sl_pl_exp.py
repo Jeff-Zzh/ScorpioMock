@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from torch.utils.data import TensorDataset, DataLoader
 from MPDLinear.model.MPDLinear_SOTA import MPDLinear_SOTA
-from MPDLinear.data_process.data_processor import load_data, clean_weather_and_save, divide_data_by_geographic, feature_engineering, windows_select_single_label
+from MPDLinear.data_process.data_processor import load_data, clean_weather_and_save, divide_data_by_geographic_and_save, feature_engineering, windows_select_single_label
 from MPDLinear.config.ModelConfig import ModelConfig
 from util.EarlyStopping import EarlyStopping
 from util.logger import setup_logger
@@ -212,7 +212,7 @@ def main():
     # 加载数据 + 数据清洗 + 按地域划分数据集(beijing/shanghai/chongqing) + 特征工程(为每个city avg或expand county列)
     ori_dataset = load_data(dataset_path)
     cleaned_dataset = clean_weather_and_save(ori_dataset)
-    beijing_data, shanghai_data, chongqing_data = divide_data_by_geographic()
+    beijing_data, shanghai_data, chongqing_data = divide_data_by_geographic_and_save()
     avg_data_list, feature_expand_data_list = feature_engineering([beijing_data])
 
     # 选用avg county的beijing city数据
