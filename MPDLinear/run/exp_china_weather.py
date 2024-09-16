@@ -12,7 +12,7 @@ from MPDLinear.data_process.data_visualization import draw_all
 from MPDLinear.model.MPDLinear_SOTA import MPDLinear_SOTA
 from MPDLinear.model.model_dict import ModelDict
 from MPDLinear.data_process.data_processor import preprocessing_data, load_data, clean_weather_and_save, \
-    divide_data_by_geographic, feature_engineering, windows_select_single_label
+    divide_data_by_geographic_and_save, feature_engineering, windows_select_single_label
 from MPDLinear.config.ModelConfig import ModelConfig
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
@@ -24,6 +24,8 @@ from util.EarlyStopping import EarlyStopping
 from util.logger import setup_logger
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+from torch.cuda.amp import autocast, GradScaler
+
 
 # 配置
 config = ModelConfig() # 初始化模型参数配置
@@ -40,7 +42,7 @@ attributes = ['pressure', 'wind_speed', 'wind_direction', 'temperature', 'humidi
 # draw_all(cleaned_dataset, attributes)
 
 # 按地区，划分数据集
-beijing_data, shanghai_data, chongqing_data = divide_data_by_geographic()
+beijing_data, shanghai_data, chongqing_data = divide_data_by_geographic_and_save()
 geo_dataset_list = [beijing_data, shanghai_data, chongqing_data]
 
 # 特征工程
@@ -56,7 +58,8 @@ feature_expand_data_chongqing = feature_expand_data_list[2]
 ####################选定数据集############################
 
 # 选择某一数据集(以avg_data_beijing为例)
-dataset_exp = avg_data_chongqing
+dataset_name = 'avg_data_beijing'
+dataset_exp = avg_data_beijing # 与dataset_name保持一致
 
 # 查看基本信息
 print("\n实验所选数据集的 数据集基础信息：")
@@ -70,6 +73,7 @@ print(dataset_exp.isnull().sum())
 
 # 填充缺失值(将所有缺失值替换为它之前最近的一个非缺失值,将前向填充后仍然存在的缺失值替换为它之后最近的一个非缺失值)
 # 插值法利用数据的趋势和模式对缺失值进行填充，而前向填充和后向填充则确保了所有缺失值都能被有效填补。这样处理后的数据将更加完整，有助于提高后续数据分析和建模的准确性
+dataset_exp = dataset_exp.infer_objects(copy=False) # 在进行插值操作前，推断对象类型列为合适的类型
 dataset_exp.interpolate(method='linear', inplace=True)
 dataset_exp.fillna(method='ffill', inplace=True)
 dataset_exp.fillna(method='bfill', inplace=True)
@@ -148,8 +152,17 @@ config.es_delta = 0.00001
 config.es_path = 'current_best_checkpoint.pt'
 config.decomposition_kernel_size = 25
 config.learning_rate = 0.001
-config.scaling_method = 'normalization' # 选择缩放方法 标准化/归一化
+config.scaling_method = 'standardization' # 选择缩放方法 标准化/归一化
+config.device = 'gpu'
 
+device = None # torch所用设备
+if config.device == 'gpu':
+# 检查是否有可用的 GPU，如果有则使用 GPU，否则使用 CPU
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"-----Using device: {device}-----")
+else:
+    device = torch.device('cpu')
+    print(f"-----Using device: {device}-----")
 
 # 构建模型输入输出 (用标准化的数据)
 # 合并标准化 或 归一化 后的特征和目标变量
@@ -164,7 +177,8 @@ target_dim_col = X.shape[1] # 最后一列是target列
 # feature列数：feature_dim_end_col-feature_dim_start_col+1个feature列=24（代码中遍历为feature_dim_start_col:feature_dim_end_col+1）展为1维向量：seq_len*feature_size = 30*24 = 720
 # X_seq: 窗口数（batch数）*窗口大小*特征列数 = 1801 * (24 * 24) = 1801 * 576（展为1维） y_seq: 1801 * 1（单目标预测）  1801 * n(多目标预测)
 X_seq, y_seq = windows_select_single_label(data_prepared, feature_dim_start_col, feature_dim_end_col, config.seq_len, target_dim_col)
-print(f"输入数据形状: {X_seq.shape}"+f"，在输入时间步长为:{config.seq_len}的前提下，数据集形状：{data_prepared.shape}，可以有:{X_seq.shape[0]}个batch")
+print(f"在输入时间步长为:{config.seq_len}的前提下，数据集形状：{data_prepared.shape}，可以有:{X_seq.shape[0]}个batch")
+print(f"特征数据形状: {X_seq.shape},输入时间步:{config.seq_len} * 特征数:{config.enc_in} = {config.seq_len * config.enc_in}")
 if len(y_seq.shape) == 1:
     print(f"目标数据形状: {y_seq.shape}"+f"一共{y_seq.shape[0]}个batch，每个batch对应 1 列预测值")
 else:
@@ -178,13 +192,13 @@ print(f"训练集大小: {X_train.shape}, {y_train.shape}")
 print(f"验证集大小: {X_val.shape}, {y_val.shape}")
 print(f"测试集大小: {X_test.shape}, {y_test.shape}")
 
-# 数据转换，numpy的ndarray 转为 torch.Tensor 类型对象
-X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
-y_train_tensor = torch.tensor(y_train, dtype=torch.float32)
-X_val_tensor = torch.tensor(X_val, dtype=torch.float32)
-y_val_tensor = torch.tensor(y_val, dtype=torch.float32)
-X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
-y_test_tensor = torch.tensor(y_test, dtype=torch.float32)
+# 数据转换，numpy的ndarray 转为 torch.Tensor 类型对象, 并移动到 GPU 或 CPU
+X_train_tensor = torch.tensor(X_train, dtype=torch.float32).to(device)
+y_train_tensor = torch.tensor(y_train, dtype=torch.float32).to(device)
+X_val_tensor = torch.tensor(X_val, dtype=torch.float32).to(device)
+y_val_tensor = torch.tensor(y_val, dtype=torch.float32).to(device)
+X_test_tensor = torch.tensor(X_test, dtype=torch.float32).to(device)
+y_test_tensor = torch.tensor(y_test, dtype=torch.float32).to(device)
 
 # 创建训练集/验证集/测试集 数据集
 train_dataset = TensorDataset(X_train_tensor, y_train_tensor)
@@ -196,11 +210,11 @@ train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=T
 val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=config.batch_size, shuffle=False)
 
-# 定义选取模型
+# 定义选取模型，并移动到 GPU 或 CPU
 model_dict = ModelDict().get_model_dict()
-model = model_dict.get(config.model)(config)
+model = model_dict.get(config.model)(config).to(device)
 
-# 定义损失函数和优化器
+# 定义损失函数和优化器(在 CPU 和 GPU 上是通用的，MSELoss 和 Adam 优化器都可以正常在 GPU 上工作)
 criterion = nn.MSELoss() # 对于回归任务，用MSE损失函数
 optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate) # 学习率设置放在ModelConfig中
 
@@ -228,6 +242,7 @@ for epoch in tqdm(range(config.num_epochs), desc = "Epochs"):
     train_loss = 0.0  # 初始化训练损失
     for inputs, targets in tqdm(train_loader, desc=f"Training Epoch {epoch + 1}", leave=False):
         optimizer.zero_grad() # 清空上一步的梯度信息
+        inputs, targets = inputs.to(device), targets.to(device)  # 将数据移动到设备CPU 或 GPU
         # 将输入数据调整为 (batch_size, seq_len, num_features) 形状以适应模型
         # inputs.size(0): 获取 inputs 张量的第一个维度大小，这通常是批次大小（batch_size）。
         # config.seq_len: 表示时间序列的长度（即输入序列的长度）。
@@ -266,6 +281,7 @@ for epoch in tqdm(range(config.num_epochs), desc = "Epochs"):
         # 遍历验证数据集的每一个批次
         for inputs, targets in val_loader:
         # for inputs, targets in tqdm(val_loader, desc=f"Validation Epoch {epoch + 1}", leave=False):
+            inputs, targets = inputs.to(device), targets.to(device)  # 将数据移动到设备CPU 或 GPU
             # 将输入数据调整为 (batch_size, seq_len, num_features) 形状以适应模型
             outputs = model(inputs.view(inputs.size(0), config.seq_len, -1))
             if config.pred_len == 1:
@@ -303,29 +319,6 @@ print(f"训练 {end_epoch} 次epoch，训练时长: {train_cost_time} 秒")
 # 在训练结束后加载最优的模型参数
 model.load_state_dict(torch.load('current_best_checkpoint.pt'))
 
-# 评估模型
-model.eval()
-test_loss = 0.0
-with torch.no_grad():
-    for inputs, targets in test_loader:
-        outputs = model(inputs.view(inputs.size(0), config.seq_len, -1))
-        if config.pred_len == 1:
-            # 输出方式2：使用每个batch中，所有channel输出的平均值
-            outputs = outputs.squeeze(dim=1)  # 将形状从 [batch_size, 1, channel] 调整为 [batch_size, channel]。
-            outputs = outputs.mean(dim=1)
-        else:
-            # 输出方式1：选择 pred_len 维度上最后一个时间步长的输出，然后再对 channel 维度进行平均
-            # outputs = outputs[:, -1, :].mean(dim=1)  # 形状变为 [32]
-            # 输出方式2: 对 pred_len 和 channel 维度进行平均
-            outputs = outputs.mean(dim=[1, 2])
-        loss = criterion(outputs.squeeze(), targets)
-        test_loss += loss.item()
-test_loss /= len(test_loader)
-
-# 记录测试损失到日志文件
-logger.info(f'Test Loss(MSE): {test_loss}')
-print(f'Test Loss: {test_loss}')
-
 
 # 保存模型状态字典(模型参数)到 model_save_path (checkpoint目录下)
 # 获取当前时间
@@ -341,11 +334,45 @@ logger.info(f'Model saved to {model_save_path}')
 print(f'Model saved to {model_save_path}')
 
 
+# 评估模型
+model.eval() # 在评估过程中不更新模型的状态字典（超参数），评估后保存的模型参数和评估前保存的参数是完全相同的
+test_mse_loss = 0.0 # MSE 累计
+test_mae_loss = 0.0 # MAE 累计
+with torch.no_grad():
+    for inputs, targets in test_loader:
+        inputs, targets = inputs.to(device), targets.to(device)  # 将数据移动到设备CPU 或 GPU
+        outputs = model(inputs.view(inputs.size(0), config.seq_len, -1))
+        if config.pred_len == 1:
+            # 输出方式2：使用每个batch中，所有channel输出的平均值
+            outputs = outputs.squeeze(dim=1)  # 将形状从 [batch_size, 1, channel] 调整为 [batch_size, channel]。
+            outputs = outputs.mean(dim=1)
+        else:
+            # 输出方式1：选择 pred_len 维度上最后一个时间步长的输出，然后再对 channel 维度进行平均
+            # outputs = outputs[:, -1, :].mean(dim=1)  # 形状变为 [32]
+            # 输出方式2: 对 pred_len 和 channel 维度进行平均
+            outputs = outputs.mean(dim=[1, 2])
+        # 计算 MSE 损失
+        loss = criterion(outputs.squeeze(), targets)
+        test_mse_loss += loss.item()
+        # 计算 MAE 损失 (使用 sklearn)
+        test_mae_loss += mean_absolute_error(targets.cpu().numpy(), outputs.squeeze().cpu().numpy())
+# 计算平均 MSE 和 MAE
+test_mse_loss /= len(test_loader)
+test_mae_loss /= len(test_loader)
+
+# 记录测试损失到日志文件
+logger.info(f'Test Loss ({config.scaling_method} Scale) MSE: {test_mse_loss}')
+print(f'Test Loss ({config.scaling_method} Scale) MSE: {test_mse_loss}')
+logger.info(f'Test Loss ({config.scaling_method} Scale) MAE: {test_mae_loss}')
+print(f'Test Loss ({config.scaling_method} Scale) MAE: {test_mae_loss}')
+
+
 # 反标准化目标变量预测值, 在测试集上评估模型的性能
 model.eval()  # 设置模型为评估模式
 predictions = [] # 装整个测试集的所有预测结果
 with torch.no_grad():
     for inputs, _ in test_loader:
+        inputs = inputs.to(device) # 将数据移动到设备CPU 或 GPU
         # 输入数据调整为 (batch_size, sequence_length, num_features) 形状以适应模型
         inputs = inputs.view(inputs.size(0), config.seq_len, -1)
         outputs = model(inputs) # 生成预测值：将输入数据传入模型进行前向传播，得到预测结果
@@ -374,6 +401,20 @@ if config.scaling_method == 'standardization':
     y_test_original_scale = scaler_y.inverse_transform(y_test.reshape(-1, 1)).flatten() # 对真实值进行反标准化
 elif config.scaling_method == 'normalization':
     y_test_original_scale = scaler_y_minmax.inverse_transform(y_test.reshape(-1, 1)).flatten() # 对真实值进行反归一化
+
+# 保存测试集上的反标准化/反归一化的真实值（Original Scale）预测值和真实值
+df_test_predict_vs_true_results = pd.DataFrame({
+    'Predictions': predictions_original_scale,
+    'True Values': y_test_original_scale
+})
+predict_data_dir = os.path.join(os.path.dirname(os.getcwd()),'predict_data')
+if not os.path.exists(predict_data_dir):
+    os.makedirs(predict_data_dir)
+# 保存到 CSV 文件
+output_csv_path = os.path.join(predict_data_dir, f'predictions_vs_true_values(Original Scale)-{model_name}-{dataset_name}-{current_time}.csv')
+df_test_predict_vs_true_results.to_csv(output_csv_path, index=False)
+logger.info(f"测试集预测值和真实值数据存储：Predictions and True Values saved to {output_csv_path}")
+print(f"测试集预测值和真实值数据存储：Predictions and True Values saved to {output_csv_path}")
 
 # 计算反标准化后的 测试集上的 预测值和真实值之间的均方误差MSE，MAE
 test_mse_loss_original_scale = mean_squared_error(y_test_original_scale, predictions_original_scale)

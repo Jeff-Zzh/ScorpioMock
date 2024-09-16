@@ -1,0 +1,4 @@
+2024-09-11 20:03:29,541 - Epoch 1/100, Train Loss(MSE): 0.1987020411170446, Validation Loss(MSE): 0.09756334262286745
+2024-09-11 20:03:29,541 - Validation loss decreased for the first time. Saving model ...
+2024-09-11 20:34:21,152 - Epoch 2/100, Train Loss(MSE): 0.09695728647021147, Validation Loss(MSE): 0.13124628692138485
+2024-09-11 20:34:21,152 - EarlyStopping counter: 1 out of 5

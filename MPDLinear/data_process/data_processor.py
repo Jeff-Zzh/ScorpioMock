@@ -51,7 +51,9 @@ def clean_weather_and_save(weather):
     weather.replace(999990, np.nan, inplace=True)
 
     # 先将 NaN 填充为一个特定值（例如 0）
-    weather['wind_direction'].fillna(0, inplace=True)
+    # weather['wind_direction'].fillna(0, inplace=True)
+    weather['wind_direction'] = weather['wind_direction'].fillna(0)
+
 
     # 去掉 wind_direction 和 phenomenon 属性
     # weather = weather.drop(["wind_direction","phenomenon"],axis=1)
@@ -349,7 +351,7 @@ def get_train_val_test_data_multi(data_prepared, is_joint=False, squence_length=
 
 '''=====================================================多目标预测数据集生成逻辑end=============================================================='''
 
-def divide_data_by_geographic():
+def divide_data_by_geographic_and_save():
     # 按地区，划分数据集
     # 加载数据集
     file_path = '../datasets/weather/weather1_by_day/clean_weather_2013_2017_china.csv'
@@ -377,15 +379,21 @@ def mean_sameday_samecity_data(city, data):
     # file_path = f'../datasets/weather/weather1_by_day/{city}_clean_weather.csv'
     # data = pd.read_csv(file_path)
 
-    # 对同一天同一城市的所有列求平均
+    # 将 'date' 列转换为日期格式
+    data['date'] = pd.to_datetime(data['date'], format='%Y%m%d')
+    # 选择所有数值列和分组列 'date'、'city'
+    numeric_columns = ['date', 'city'] + list(data.select_dtypes(include='number').columns)
+    # 对同一天同一城市的（即按 'date' 和 'city' 分组的）所有数值列求平均
     # groupby方法用于对DataFrame进行分组，按照date和city两个列进行分组，具有相同date和city值的行将被分在同一个组中
     # mean对每个组计算其数值列的均值（平均值）,非数值型的列，将会被忽略
     # reset_index方法用于重置索引,将date和city列从索引中移回为普通列
-    grouped_data = data.groupby(['date', 'city']).mean().reset_index()
+    grouped_data = data[numeric_columns].groupby(['date', 'city']).mean().reset_index()
 
     # 填充缺失值
     # 使用插值法填充缺失值
-    grouped_data.interpolate(method='linear', inplace=True)
+    # 在进行插值操作前，推断对象类型列为适当的数据类型
+    grouped_data = grouped_data.infer_objects(copy=False)
+    grouped_data.interpolate(method='linear', inplace=True) # 报warning: will deprecated in the future
 
     # 保存结果
     grouped_data.to_csv(f'../datasets/weather/weather1_by_day/divide_by_city/average_weather_by_day_{city}.csv', index=False)

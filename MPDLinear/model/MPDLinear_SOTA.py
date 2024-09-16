@@ -72,6 +72,9 @@ class multi_part_series_decompose(nn.Module):
         :param x: 输入形状[batch_size, seq_len, channels]
         :return:
         '''
+        # 将输入转为 float32，以避免 cuFFT 对 float16 的限制
+        x = x.to(torch.float32)
+
         # 对输入的时间序列 进行 快速傅里叶变换（FFT），提取周期性成分
         fft_result = torch.fft.fft(x, dim=1) # 在张量 x 的第1维度（时间步序列seq_len的维度上）上进行傅里叶变换, 捕捉序列随时间变化的周期性特征
         # 设置阈值，去除高频噪声，仅保留主要中长期周期性成分；保留低频分量以提取主要的周期性成分，去除高频噪声，seq_len维度
@@ -93,6 +96,8 @@ class multi_part_series_decompose(nn.Module):
 
         # 2. 非线性趋势序列成分 (从趋势序列中提取非线性趋势序列)
         trend_series_permuted = trend_series.permute(0, 2, 1)  # 输出[batch_size, channels, seq_len]
+        # 将将此部分数据精度由 float16 转回 float32，使得在Linear层两矩阵相乘有相同的dtype
+        # trend_series_permuted = trend_series_permuted.to(torch.float32)
         # 先在 seq_len 维度上提取非线性趋势序列，进行非线性映射
         nonlinear_trend_series = self.nonlinear_trend_seq_len(trend_series_permuted)
         nonlinear_trend_series = nonlinear_trend_series.permute(0, 2, 1) # 输出[batch_size, seq_len, channels]
@@ -215,6 +220,7 @@ class MPDLinear_SOTA(nn.Module):
                 # 选取 seasonal_init 张量中所有批次（batch_size 维度）的第 i 个通道的数据，并且选择该通道中所有的时间步（seq_len 维度）
                 # 返回的张量形状 seasonal_init [batch_size, channels, seq_len] -> seasonal_init[:, i, :] 形状[batch_size, seq_len] ->经过线性层 [batch_size, pred_len]
                 # 对每个样本（每一个batch），提取了该batch第 i 个通道的整个时间序列，然后给Linear层输入
+                # 应用 Linear 层时，确保输入和线性层的权重的 dtype 一致，均为float32
                 seasonal_output[:, i, :] = self.Linear_Seasonal[i](seasonal_init[:, i, :]) # 第i个channel的Linear层 形状为[batch_size, seq_len] -> [batch_size, pred_len]
                 # 该通道的趋势性成分经过线性层后的输出
                 trend_output[:, i, :] = self.Linear_Trend[i](trend_init[:, i, :])
