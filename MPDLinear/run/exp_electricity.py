@@ -25,7 +25,7 @@ from datetime import datetime
 from util.EarlyStopping import EarlyStopping
 from util.logger import setup_logger
 import matplotlib.pyplot as plt
-from torch.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler # torch 1.9.0没有，torch2.4.1有
 
 '''
 MPDLinear_SOTA在electricity数据集上不同输入seq_len的模型训练&预测效果实验
