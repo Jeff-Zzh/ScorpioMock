@@ -1,0 +1,6 @@
+2024-09-14 17:56:16,046 - 
+±¾´ÎÑµÁ·ÅäÖÃconfig:ModelConfig(model=MPDLinear_SOTA, batch_size=4, seq_len=504, enc_in=328, pred_len=5, individual=True, num_epochs=100,es_patience=5, es_verbose=True, es_delta=1e-05, es_path=current_best_checkpoint.pt,decomposition_kernel_size=25,learning_rate=0.001,scaling_method=standardization,device=gpu)
+2024-09-14 18:54:17,372 - Epoch 1/100, Train Loss(MSE): nan, Validation Loss(MSE): nan
+2024-09-14 18:54:17,372 - Validation loss decreased for the first time. Saving model ...
+2024-09-14 19:51:48,911 - Epoch 2/100, Train Loss(MSE): nan, Validation Loss(MSE): nan
+2024-09-14 19:51:48,911 - Validation loss decreased (nan --> nan).  Saving model ...

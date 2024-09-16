@@ -1,0 +1,2 @@
+2024-09-14 23:39:28,715 - 
+±æ¥Œ—µ¡∑≈‰÷√config:ModelConfig(model=MPDLinear_SOTA, batch_size=4, seq_len=504, enc_in=328, pred_len=5, individual=True, num_epochs=100,es_patience=5, es_verbose=True, es_delta=1e-05, es_path=current_best_checkpoint.pt,decomposition_kernel_size=25,learning_rate=0.0001,scaling_method=standardization,device=gpu)

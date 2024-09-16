@@ -1,0 +1,35 @@
+2024-09-14 09:40:08,204 - 
+本次训练配置config:ModelConfig(model=MPDLinear_SOTA, batch_size=32, seq_len=336, enc_in=328, pred_len=5, individual=True, num_epochs=100,es_patience=5, es_verbose=True, es_delta=1e-05, es_path=current_best_checkpoint.pt,decomposition_kernel_size=25,learning_rate=0.001,scaling_method=standardization,device=gpu)
+2024-09-14 09:46:52,366 - Epoch 1/100, Train Loss(MSE): 0.16012551872776104, Validation Loss(MSE): 0.09347769209161037
+2024-09-14 09:46:52,367 - Validation loss decreased for the first time. Saving model ...
+2024-09-14 09:53:33,557 - Epoch 2/100, Train Loss(MSE): 0.09787171446360074, Validation Loss(MSE): 0.07353429076057381
+2024-09-14 09:53:33,557 - Validation loss decreased (0.093478 --> 0.073534).  Saving model ...
+2024-09-14 10:00:12,888 - Epoch 3/100, Train Loss(MSE): 0.07478658609665358, Validation Loss(MSE): 0.06448153077011429
+2024-09-14 10:00:12,888 - Validation loss decreased (0.073534 --> 0.064482).  Saving model ...
+2024-09-14 10:06:55,942 - Epoch 4/100, Train Loss(MSE): 0.054429817537848764, Validation Loss(MSE): 0.06816133223019721
+2024-09-14 10:06:55,942 - EarlyStopping counter: 1 out of 5
+2024-09-14 10:13:36,055 - Epoch 5/100, Train Loss(MSE): 0.047981208796398, Validation Loss(MSE): 0.05662867158833074
+2024-09-14 10:13:36,055 - Validation loss decreased (0.064482 --> 0.056629).  Saving model ...
+2024-09-14 10:20:16,431 - Epoch 6/100, Train Loss(MSE): 0.04951654324737879, Validation Loss(MSE): 0.06526762637786748
+2024-09-14 10:20:16,431 - EarlyStopping counter: 1 out of 5
+2024-09-14 10:26:56,149 - Epoch 7/100, Train Loss(MSE): 0.045211112569444455, Validation Loss(MSE): 0.05379771095950429
+2024-09-14 10:26:56,149 - Validation loss decreased (0.056629 --> 0.053798).  Saving model ...
+2024-09-14 10:33:35,652 - Epoch 8/100, Train Loss(MSE): 0.4002235672436655, Validation Loss(MSE): 0.6484869371463613
+2024-09-14 10:33:35,652 - EarlyStopping counter: 1 out of 5
+2024-09-14 10:40:15,481 - Epoch 9/100, Train Loss(MSE): 0.21889546413261157, Validation Loss(MSE): 0.13967604108336495
+2024-09-14 10:40:15,481 - EarlyStopping counter: 2 out of 5
+2024-09-14 10:46:56,039 - Epoch 10/100, Train Loss(MSE): 0.383926406829403, Validation Loss(MSE): 0.13281791039356372
+2024-09-14 10:46:56,039 - EarlyStopping counter: 3 out of 5
+2024-09-14 10:53:37,367 - Epoch 11/100, Train Loss(MSE): 0.11316447546848885, Validation Loss(MSE): 0.10828226972825644
+2024-09-14 10:53:37,367 - EarlyStopping counter: 4 out of 5
+2024-09-14 11:00:18,640 - Epoch 12/100, Train Loss(MSE): 0.10965250878379895, Validation Loss(MSE): 0.13608924903702446
+2024-09-14 11:00:18,640 - EarlyStopping counter: 5 out of 5
+2024-09-14 11:00:18,640 - Early stopping
+2024-09-14 11:00:18,640 - 训练 12 次epoch，训练时长: 4810.4334399700165 秒
+2024-09-14 11:00:38,377 - Test Loss (standardization Scale) MSE: 0.07891665745481122
+2024-09-14 11:00:38,377 - Test Loss (standardization Scale) MAE: 0.16857297718524933
+2024-09-14 11:00:38,669 - Model saved to D:\PythonProject\ScorpioMock\MPDLinear\checkpoint\MPDLinear_SOTA_20240914-110038_bs32_seq336_enc328_pred_len5_individualTrue_checkpoint.pth
+2024-09-14 11:00:56,582 - 测试集预测值和真实值数据存储：Predictions and True Values saved to D:\PythonProject\ScorpioMock\MPDLinear\predict_data\predictions_vs_true_values(Original Scale)-MPDLinear_SOTA-electricity-20240914-110038-sl336.csv
+2024-09-14 11:00:56,583 - Test Loss (Original Scale) MSE: 24319.588900093142
+2024-09-14 11:00:56,583 - Test Loss (Original Scale) MAE: 93.54673314085363
+
