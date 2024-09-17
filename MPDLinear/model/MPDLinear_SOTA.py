@@ -77,7 +77,7 @@ class multi_part_series_decompose(nn.Module):
 
         # 对输入的时间序列 进行 快速傅里叶变换（FFT），提取周期性成分
         fft_result = torch.fft.fft(x, dim=1) # 在张量 x 的第1维度（时间步序列seq_len的维度上）上进行傅里叶变换, 捕捉序列随时间变化的周期性特征
-        # 设置阈值，去除高频噪声，仅保留主要周期性成分；保留低频分量以提取主要的周期性成分，去除高频噪声，seq_len维度
+        # 设置阈值，去除高频噪声，仅保留主要中长期周期性成分；保留低频分量以提取主要的周期性成分，去除高频噪声，seq_len维度
         # threshold 是保留的低频分量的阈值,是 seq_len 的 10%，即保留低频分量的前 10%，剩余的 90% 被视为高频噪声
         threshold = int(x.size(1) * 0.1) # 保留的低频分量数量:int(30*0.1)=3;在训练模型过程中，可以对threshold做调整，以确保提取到的周期性成分能够最佳地表示数据中的周期性特征
         fft_result[:, threshold:] = 0 # 去除高频噪声: 将超过阈值的高频分量置为 0，即去除了高频噪声，只保留主要的低频周期性成分
@@ -109,7 +109,7 @@ class multi_part_series_decompose(nn.Module):
         res_trend_series = x - trend_series # 去除趋势序列后的残留序列（residual series），res_trend_series 序列主要包含季节性成分、周期性成分及噪声
         seasonal_series = self.moving_avg(res_trend_series) # 季节性成分（Seasonal Component）
 
-        # 4.周期趋势成分
+        # 4.周期趋势成分（seq_len维度上的周期性成分）
         res_trend_seasonal_series = res_trend_series - seasonal_series # 去除季节性成分后的残留序列（Residual series）
         periodic_series = self.get_periodic_component(res_trend_seasonal_series)  # 取出周期性成分（Periodic Component） 使用移动平均法/傅里叶变换/希尔伯特-黄变换
 
@@ -200,6 +200,9 @@ class MPDLinear_SOTA(nn.Module):
         periodic_init = periodic_series.permute(0, 2, 1)
         res_trend_season_periodic_init = res_trend_season_periodic_series.permute(0, 2, 1)
         nonlinear_trend_init = nonlinear_trend_series.permute(0, 2, 1)
+
+        # 此处可应用seq_len_temporal_attention，时间的自注意力机制层1
+        # 输入为trend_init、seasonal_init、periodic_init、res_trend_season_periodic_init、nonlinear_trend_init
 
         if self.individual:
             # 为每个通道创建输出张量,存储每个通道的线性层输出结果 shape:[batch_size, channel, pred_len]
