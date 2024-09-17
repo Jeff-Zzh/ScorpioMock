@@ -201,6 +201,9 @@ class MPDLinear_SOTA(nn.Module):
         res_trend_season_periodic_init = res_trend_season_periodic_series.permute(0, 2, 1)
         nonlinear_trend_init = nonlinear_trend_series.permute(0, 2, 1)
 
+        # 此处可应用seq_len_temporal_attention，时间的自注意力机制层1
+        # 输入为trend_init、seasonal_init、periodic_init、res_trend_season_periodic_init、nonlinear_trend_init
+
         if self.individual:
             # 为每个通道创建输出张量,存储每个通道的线性层输出结果 shape:[batch_size, channel, pred_len]
             trend_output = torch.zeros([trend_init.size(0), trend_init.size(1), self.pred_len],

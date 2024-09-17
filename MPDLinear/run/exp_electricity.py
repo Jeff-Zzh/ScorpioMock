@@ -34,7 +34,7 @@ MPDLinear_SOTA在electricity数据集上不同输入seq_len的模型训练&预�
 
 # 定义不同的 seq_len 值列表
 # seq_len_list = [24, 48, 72, 96, 120, 144, 168, 192, 336, 504, 672, 720]
-# seq_len_list = [24, 48, 72, 96] # 先跑这4个seq_len的，因为如果一下子遍历所有的，估计得跑个1周的感觉，先看看这4个跑得跑多久, 大概4小时
+seq_len_list = [24, 48, 72, 96] # 先跑这4个seq_len的，因为如果一下子遍历所有的，估计得跑个1周的感觉，先看看这4个跑得跑多久, 大概4小时
 # seq_len_list = [120, 144, 168, 192]  # 跑了一个晚上+一个上午
 # 在batch_size=64,pred_len=5前提下，跑seq_len=336参数时，报错：
 # torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 8.53 GiB. GPU 0 has a total capacity of 6.00 GiB of which 0 bytes is free.
@@ -44,7 +44,7 @@ MPDLinear_SOTA在electricity数据集上不同输入seq_len的模型训练&预�
 # 虽然在每个 epoch 开始时调用 torch.cuda.empty_cache()，这会清理 PyTorch 的缓存，释放一些显存，但是为防止问题不再出现，更大一种减小问题出现概率的方式，
 # 还是减小batch_size，我们先把batch_size从64降为32试一试，以下4个大seq_len的最好每个都单独跑，因为其占用的内存实在是太大了
 # seq_len_list = [336] # batch_size = 32时可以
-seq_len_list = [504] # batch_size = 32时，RAM运行内存不够报错，已调整window设置，提升系统虚拟内存了；还是不行，会CUDA OOM, 把batch_size设为16
+# seq_len_list = [504] # batch_size = 32时，RAM运行内存不够报错，已调整window设置，提升系统虚拟内存了；还是不行，会CUDA OOM, 把batch_size设为16
 # seq_len_list = [672]
 # seq_len_list = [720]
 
@@ -144,7 +144,7 @@ print("用标准化后的数据")
 # 设置模型参数配置
 # 选择模型
 config.model = 'MPDLinear_SOTA'
-config.batch_size = 32 # 数据集有1825个样本。通常，对于小型数据集，较小的 batch_size 会更合适，如 16、32(cpu) 或 64,128(gpu)。这样可以更充分地利用数据并防止内存溢出
+config.batch_size = 64 # 数据集有1825个样本。通常，对于小型数据集，较小的 batch_size 会更合适，如 16、32(cpu) 或 64,128(gpu)。这样可以更充分地利用数据并防止内存溢出
 # seq_len选择
 # 常用起点: 可以从 30 天（一个月的时间序列数据）开始。这通常是一个合理的起点，既能捕捉短期趋势，又不会过长。
 # 根据模型调整: 如果在训练过程中发现模型表现良好，可以逐步增加 seq_len，例如增加到 60 天、90 天或 180 天，看看是否能进一步提升模型性能
@@ -163,7 +163,7 @@ config.es_delta = 0.00001
 config.es_path = 'current_best_checkpoint.pt'
 config.decomposition_kernel_size = 25
 config.learning_rate = 0.0001 # 0.001 -> 0.0001 -> 0.00001
-config.scaling_method = 'standardization' # 选择缩放方法 标准化/归一化
+config.scaling_method = 'normalization' # 选择缩放方法 标准化/归一化
 config.device = 'gpu'
 
 
@@ -452,7 +452,7 @@ for seq_len in seq_len_list:
     if not os.path.exists(predict_data_dir):
         os.makedirs(predict_data_dir)
     # 保存到 CSV 文件
-    output_csv_path = os.path.join(predict_data_dir, f'predictions_vs_true_values(Original Scale)-{model_name}-{dataset_name}-{current_time}-sl{config.seq_len}.csv')
+    output_csv_path = os.path.join(predict_data_dir, f'predictions_vs_true_values(Original Scale)-{model_name}-{dataset_name}-{current_time}-sl{config.seq_len}_{config.scaling_method}.csv')
     df_test_predict_vs_true_results.to_csv(output_csv_path, index=False)
     logger.info(f"测试集预测值和真实值数据存储：Predictions and True Values saved to {output_csv_path}")
     print(f"测试集预测值和真实值数据存储：Predictions and True Values saved to {output_csv_path}")
@@ -477,7 +477,7 @@ for seq_len in seq_len_list:
     plt.title('Predictions vs True Values')
     plt.legend()
     plt.grid(True)
-    plot_path = os.path.join(predict_pic_dir, f'predictions_vs_true_values_{current_time}_{model_name}.png')
+    plot_path = os.path.join(predict_pic_dir, f'predictions_vs_true_values-{model_name}-{dataset_name}-{current_time}-sl{config.seq_len}_{config.scaling_method}.png')
     plt.savefig(plot_path)
-    plt.show()
+    # plt.show()
     print(f"\n================实验结束：seq_len = {config.seq_len}, 模型超参数和测试集预测结果已保存。==============\n")
