@@ -202,21 +202,21 @@ for seq_len in seq_len_list:
         print(f"目标数据形状: {y_seq.shape}" + f"一共{y_seq.shape[0]}个batch，每个batch对应 {y_seq.shape[1]} 列预测值")
 
     X_train, y_train, X_val, y_val, X_test, y_test = None, None, None, None, None, None
-    if platform.system() == 'Linux': # Linux服务器调不了虚拟内存，只能尝试通过内存映射来把数据集读到内存中，再进行数据集划分
+    if platform.system() == 'Linux with not enough RAM': # Linux服务器调不了虚拟内存，只能尝试通过内存映射来把数据集读到内存中，再进行数据集划分
         # 使用内存映射（memory-mapped files）来处理大型数据集
         # 将 X_seq 和 y_seq 保存到 .npy 文件
-        np.save('/usr/bin/X_seq.npy', X_seq)
-        np.save('/usr/bin/y_seq.npy', y_seq)
+        np.save('/root/autodl-tmp/X_seq.npy', X_seq) # /root/autodl-tmp路径是我们autodl买的的数据盘，免费50GB, 我扩容到150GB了
+        np.save('/root/autodl-tmp/y_seq.npy', y_seq)
 
         # 使用内存映射加载 .npy 文件
-        X_seq_mmap = np.load('X_seq.npy', mmap_mode='r')
-        y_seq_mmap = np.load('y_seq.npy', mmap_mode='r')
+        X_seq_mmap = np.load('/root/autodl-tmp/X_seq.npy', mmap_mode='r')
+        y_seq_mmap = np.load('/root/autodl-tmp/y_seq.npy', mmap_mode='r')
 
         # 数据集划分 80% 训练集，10% 验证集，10% 测试集, 确保数据集的顺序是随机的，X_seq 和 y_seq 都是 ndarray，切分数据时可能会导致内存占用过多，因为 train_test_split 会复制数组
         X_train, X_temp, y_train, y_temp = train_test_split(X_seq_mmap, y_seq_mmap, test_size=0.2, random_state=42,shuffle=True)
         X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42, shuffle=True)
-    elif platform.system() == 'Windows': # Windows可以通过调虚拟内存，来扩大内存，但Linux不行
-        X_train, X_temp, y_train, y_temp = train_test_split(X_seq_mmap, y_seq_mmap, test_size=0.2, random_state=42,shuffle=True)
+    elif platform.system() == 'Windows' or 'Linux': # Windows可以通过调虚拟内存，来扩大内存，但Linux不行
+        X_train, X_temp, y_train, y_temp = train_test_split(X_seq, y_seq, test_size=0.2, random_state=42,shuffle=True)
         X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42, shuffle=True)
 
     print(f"训练集大小: {X_train.shape}, {y_train.shape}")
