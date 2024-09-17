@@ -205,8 +205,8 @@ for seq_len in seq_len_list:
     if platform.system() == 'Linux': # Linux服务器调不了虚拟内存，只能尝试通过内存映射来把数据集读到内存中，再进行数据集划分
         # 使用内存映射（memory-mapped files）来处理大型数据集
         # 将 X_seq 和 y_seq 保存到 .npy 文件
-        np.save('X_seq.npy', X_seq)
-        np.save('y_seq.npy', y_seq)
+        np.save('/usr/bin/X_seq.npy', X_seq)
+        np.save('/usr/bin/y_seq.npy', y_seq)
 
         # 使用内存映射加载 .npy 文件
         X_seq_mmap = np.load('X_seq.npy', mmap_mode='r')
