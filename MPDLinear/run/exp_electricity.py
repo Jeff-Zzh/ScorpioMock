@@ -43,9 +43,9 @@ MPDLinear_SOTA在electricity数据集上不同输入seq_len的模型训练&预�
 # 虽然在每个 epoch 开始时调用 torch.cuda.empty_cache()，这会清理 PyTorch 的缓存，释放一些显存，但是为防止问题不再出现，更大一种减小问题出现概率的方式，
 # 还是减小batch_size，我们先把batch_size从64降为32试一试，以下4个大seq_len的最好每个都单独跑，因为其占用的内存实在是太大了
 # seq_len_list = [336] # batch_size = 32时可以
-seq_len_list = [504] # batch_size = 32时，RAM运行内存不够报错，已调整window设置，提升系统虚拟内存了；还是不行，会CUDA OOM, 把batch_size设为16
+# seq_len_list = [504] # batch_size = 32时，RAM运行内存不够报错，已调整window设置，提升系统虚拟内存了；还是不行，会CUDA OOM, 把batch_size设为16，还是不行，后面改为float16/float32混合精度训练 + float32精度推理，就能训练了
 # seq_len_list = [672]
-# seq_len_list = [720]
+seq_len_list = [720]
 
 
 # 配置
