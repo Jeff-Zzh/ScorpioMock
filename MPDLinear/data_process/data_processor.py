@@ -503,6 +503,36 @@ def feature_engineering_for_electricity_and_save(electricity_dataset):
 
     return electricity_dataset
 
+def feature_engineering_for_exchange_rate_and_save(exchange_rate_dataset):
+    '''
+    9_LTSF_dataset 9大时间序列数据集中 汇率数据集exchange_rate的定制特征工程，
+    主要做时间特征的提取，特征扩展feature_expand，从date列中，尽可能多的提取时序特征列
+    :param exchange_rate_dataset:
+    :return:
+    '''
+    # 将 'date' 列转换为 datetime 类型
+    exchange_rate_dataset['date'] = pd.to_datetime(exchange_rate_dataset['date'])
+
+    # 提取年、月、日、小时等时间特征列
+    exchange_rate_dataset['year'] = exchange_rate_dataset['date'].dt.year
+    exchange_rate_dataset['month'] = exchange_rate_dataset['date'].dt.month
+    exchange_rate_dataset['day'] = exchange_rate_dataset['date'].dt.day
+    exchange_rate_dataset['hour'] = exchange_rate_dataset['date'].dt.hour
+    # electricity_dataset['minute'] = electricity_dataset['date'].dt.minute
+    exchange_rate_dataset['day_of_week'] = exchange_rate_dataset['date'].dt.dayofweek
+    exchange_rate_dataset['day_of_year'] = exchange_rate_dataset['date'].dt.dayofyear
+    exchange_rate_dataset['week_of_year'] = exchange_rate_dataset['date'].dt.isocalendar().week
+    exchange_rate_dataset['quarter'] = exchange_rate_dataset['date'].dt.quarter
+
+    # 将时间特征列移动到数据集最左边
+    time_features = exchange_rate_dataset[['year', 'month', 'day', 'hour', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter']]
+    exchange_rate_dataset = exchange_rate_dataset.drop(columns=['date', 'year', 'month', 'day', 'hour', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter'])
+    exchange_rate_dataset = pd.concat([time_features, exchange_rate_dataset], axis=1)
+
+    # 存储
+    exchange_rate_dataset.to_csv('../datasets/9_LTSF_dataset/processed/exchange_rate_processed.csv', index=False)
+
+    return exchange_rate_dataset
 
 
 if __name__ == '__main__':
