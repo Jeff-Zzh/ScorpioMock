@@ -15,7 +15,8 @@ from MPDLinear.data_process.data_visualization import draw_all
 from MPDLinear.model.MPDLinear_SOTA import MPDLinear_SOTA
 from MPDLinear.model.model_dict import ModelDict
 from MPDLinear.data_process.data_processor import preprocessing_data, load_data, clean_weather_and_save, \
-    divide_data_by_geographic_and_save, feature_engineering, windows_select_single_label, feature_engineering_for_electricity_and_save
+    divide_data_by_geographic_and_save, feature_engineering, windows_select_single_label, \
+    feature_engineering_for_electricity_and_save, feature_engineering_for_exchange_rate_and_save
 from MPDLinear.config.ModelConfig import ModelConfig
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
@@ -26,46 +27,25 @@ from datetime import datetime
 from util.EarlyStopping import EarlyStopping
 from util.logger import setup_logger
 import matplotlib.pyplot as plt
-from torch.amp import autocast, GradScaler # torch 1.9.0没有，torch2.4.1有,并且需要torch为CUDA版本的torch
+from torch.amp import autocast, GradScaler  # torch 1.9.0没有，torch2.4.1有,并且需要torch为CUDA版本的torch
 
-'''
-MPDLinear_SOTA在electricity数据集上不同输入seq_len的模型训练&预测效果实验
-'''
-
-# 定义不同的 seq_len 值列表(间隔为hour)
-# seq_len_list = [24, 48, 72, 96, 120, 144, 168, 192, 336, 504, 672, 720]
-# seq_len_list = [24, 48, 72, 96] # 先跑这4个seq_len的，因为如果一下子遍历所有的，估计得跑个1周的感觉，先看看这4个跑得跑多久, 大概4小时
-# seq_len_list = [120, 144, 168, 192]  # 跑了一个晚上+一个上午
-seq_len_list = [336, 504, 672, 720]
-# 在batch_size=64,pred_len=5前提下，跑seq_len=336参数时，报错：
-# torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 8.53 GiB. GPU 0 has a total capacity of 6.00 GiB of which 0 bytes is free.
-# Of the allocated memory 6.19 GiB is allocated by PyTorch, and 566.26 MiB is reserved by PyTorch but unallocated.
-# If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.
-# See documentation for Memory Management
-# 虽然在每个 epoch 开始时调用 torch.cuda.empty_cache()，这会清理 PyTorch 的缓存，释放一些显存，但是为防止问题不再出现，更大一种减小问题出现概率的方式，
-# 还是减小batch_size，我们先把batch_size从64降为32试一试，以下4个大seq_len的最好每个都单独跑，因为其占用的内存实在是太大了
-# seq_len_list = [336] # batch_size = 32时可以
-# seq_len_list = [504] # batch_size = 32时，RAM运行内存不够报错，已调整window设置，提升系统虚拟内存了；还是不行，会CUDA OOM, 把batch_size设为16
-# seq_len_list = [672]
-# seq_len_list = [720]
-
+# 定义不同的 seq_len 值列表(间隔为day)
+seq_len_list = [1, 3, 5, 7, 30, 90, 180, 365, 730]
 
 # 配置
 config = ModelConfig() # 初始化模型参数配置
-dataset_path = '../datasets/9_LTSF_dataset/ori/electricity.csv'
+dataset_path = '../datasets/9_LTSF_dataset/ori/exchange_rate.csv'
 
 # 加载数据
 ori_dataset = load_data(dataset_path)
 
 # 特征工程:进行时间特征提取
 # 时间特征提取应发生在标准化/归一化之前,这是因为时间特征（例如 year、month、day、hour 等）是离散的或有明确的周期性，它们的意义不会因标准化而增强。如果先进行标准化，时间特征的原始信息（例如年份或月份的顺序和周期性）可能会被破坏，进而影响模型的性能
-expand_time_feature_dataset = feature_engineering_for_electricity_and_save(ori_dataset)
+expand_time_feature_dataset = feature_engineering_for_exchange_rate_and_save(ori_dataset)
 
 # 选择数据集
-dataset_name = 'electricity'
+dataset_name = 'exchange_rate'
 dataset_exp = expand_time_feature_dataset
-# dataset_exp = dataset_exp.astype('float32') # 将所有数值列转为float32，减小内存负担，不然容易报错numpy申请不了内存
-
 
 # 查看基本信息
 print("\n实验所选数据集的 数据集基础信息：")
@@ -82,12 +62,13 @@ print(dataset_exp.isnull().sum())
 # 插值法利用数据的趋势和模式对缺失值进行填充，而前向填充和后向填充则确保了所有缺失值都能被有效填补。这样处理后的数据将更加完整，有助于提高后续数据分析和建模的准确性
 # 先把数据集的所有列都转为数值列
 dataset_exp = dataset_exp.apply(pd.to_numeric, errors='coerce')
+# 强制将 'week_of_year'  UInt32 类型转换为 int64
+dataset_exp['week_of_year'] = dataset_exp['week_of_year'].astype('int64')
 # 先进行线性插值，处理连续数据的缺失值
 dataset_exp.interpolate(method='linear', inplace=True)
 # 然后使用前向填充和后向填充处理剩余的缺失值
 dataset_exp.fillna(method='ffill', inplace=True)
 dataset_exp.fillna(method='bfill', inplace=True)
-
 
 # 检查填充后缺失值情况
 print("\n插值/前向/后向填充后，实验所选数据集的缺失值情况：")
@@ -96,12 +77,11 @@ print(dataset_exp.isnull().sum())
 # 特征选择/Label选择
 # 选择数值型特征列，在时序预测任务中，日期和时间相关的特征（如 year、month、week、quarter 和 day）通常可以作为特征，
 # 因为它们可以捕捉到数据的季节性和周期性变化。我们将这些列也作为特征列来构建模型。
-selected_features = dataset_exp.columns[:328] # 选前328列作为feature
+selected_features = dataset_exp.columns[:15] # 选前15列作为feature
 
 # 提取特征feature和选择预测目标变量target(用过去一段时间的所有特征来预测未来某一时间点的目标变量,可为temperature、humidity等等, 单目标预测，多目标预测)
 X = dataset_exp[selected_features]  # 特征变量
 y = dataset_exp['OT']  # 目标变量
-
 
 # 对feature和label进行 标准化(数据均值为 0，标准差为 1) 或 归一化(所有值归一化到 [0, 1] 范围内)， 选其一，都进行数据存储
 # Q:为什么需要对feature和label进行标准化 或 归一化？
@@ -119,7 +99,7 @@ y_label_standardized_df = pd.DataFrame(y_standardized, columns=['OT'])
 # 合并特征feature和目标变量target
 standardized_data = pd.concat([X_feature_standardized_df, y_label_standardized_df], axis=1)
 # 保存标准化后的数据到 CSV 文件
-standardized_data.to_csv('../datasets/9_LTSF_dataset/processed/standardized/electricity_processed_standardized.csv', index=False)
+standardized_data.to_csv('../datasets/9_LTSF_dataset/processed/standardized/exchange_rate_processed_standardized.csv', index=False)
 
 # 归一化feature和target
 # 归一化特征
@@ -134,13 +114,9 @@ y_label_normalized_df = pd.DataFrame(y_normalized, columns=['OT'])
 # 合并特征和目标变量
 normalized_data = pd.concat([X_feature_normalized_df, y_label_normalized_df], axis=1)
 # 保存归一化后的数据到 CSV 文件
-normalized_data.to_csv('../datasets/9_LTSF_dataset/processed/normalized/electricity_processed_normalized.csv', index=False)
-
+normalized_data.to_csv('../datasets/9_LTSF_dataset/processed/normalized/exchange_rate_processed_normalized.csv', index=False)
 
 print("已完成标准化 和 归一化，并已经存储标准化和归一化后的数据")
-print("用标准化后的数据")
-# print("用归一化后的数据")
-
 
 # 设置模型参数配置
 # 选择模型
@@ -149,7 +125,7 @@ config.batch_size = 64 # 数据集有1825个样本。通常，对于小型数据
 # seq_len选择
 # 常用起点: 可以从 30 天（一个月的时间序列数据）开始。这通常是一个合理的起点，既能捕捉短期趋势，又不会过长。
 # 根据模型调整: 如果在训练过程中发现模型表现良好，可以逐步增加 seq_len，例如增加到 60 天、90 天或 180 天，看看是否能进一步提升模型性能
-config.seq_len = None # {24，48，72，96，120，144，168，192，336，504，672，720}
+config.seq_len = None # [1, 3, 5, 7, 30, 90, 180, 365, 730]
 # pred_len选择
 # 推荐起点: 开始尝试 pred_len = 7（一周）或 pred_len = 10（十天），这些是常用的时间段，并且容易观察预测的准确性。
 # 调整方向: 如果模型训练效果较好，你可以逐步增加 pred_len，如 14 天或 30 天，直到找到一个适合的平衡点。
@@ -164,10 +140,8 @@ config.es_delta = 0.00001
 config.es_path = 'current_best_checkpoint.pt'
 config.decomposition_kernel_size = 25
 config.learning_rate = 0.0001 # 0.001 -> 0.0001 -> 0.00001
-config.scaling_method = 'normalization' # 选择缩放方法 标准化/归一化
+config.scaling_method = 'standardization' # 选择缩放方法 标准化/归一化 standardization/normalization
 config.device = 'gpu'
-
-
 
 device = None # torch所用设备
 if config.device == 'gpu':
@@ -178,12 +152,11 @@ else:
     device = torch.device('cpu')
     print(f"-----Using device: {device}-----")
 
-
-# 开始循环测试不同的 seq_len
 for seq_len in seq_len_list:
     config.seq_len = seq_len  # 设置当前的 seq_len
     # 构建模型输入输出 (用标准化的数据)
     # 合并标准化 或 归一化 后的特征和目标变量
+    data_prepared = None
     if config.scaling_method == 'standardization': # 标准化后的特征和目标
         data_prepared = np.column_stack((X_standardized, y_standardized))
     elif config.scaling_method == 'normalization':# 归一化后的特征和目标

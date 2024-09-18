@@ -12,7 +12,8 @@ def setup_logger(log_dir, model_name, config):
     # 生成唯一的日志文件名
     log_filename = (f"{model_name}-{current_time}-bs{config.batch_size}-sl{config.seq_len}-pl{config.pred_len}-enc{config.enc_in}" +
                     f"-individual{config.individual}-num_epochs{config.num_epochs}-es_patience{config.es_patience}" +
-                    f"-es_verbose{config.es_verbose}-es_delta{config.es_delta}-es_path{config.es_path}.log")
+                    f"-es_verbose{config.es_verbose}-es_delta{config.es_delta}-es_path{config.es_path}-ks{config.decomposition_kernel_size}" +
+                    f"-lr{config.learning_rate}-{config.scaling_method}-{config.device}.log")
     log_filepath = os.path.join(log_dir, log_filename)
 
     # 配置日志记录器
