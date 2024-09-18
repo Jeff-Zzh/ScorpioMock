@@ -34,8 +34,8 @@ MPDLinear_SOTA在electricity数据集上不同输入seq_len的模型训练&预�
 
 # 定义不同的 seq_len 值列表
 # seq_len_list = [24, 48, 72, 96, 120, 144, 168, 192, 336, 504, 672, 720]
-seq_len_list = [24, 48, 72, 96] # 先跑这4个seq_len的，因为如果一下子遍历所有的，估计得跑个1周的感觉，先看看这4个跑得跑多久, 大概4小时
-# seq_len_list = [120, 144, 168, 192]  # 跑了一个晚上+一个上午
+# seq_len_list = [24, 48, 72, 96] # 先跑这4个seq_len的，因为如果一下子遍历所有的，估计得跑个1周的感觉，先看看这4个跑得跑多久, 大概4小时
+seq_len_list = [120, 144, 168, 192]  # 跑了一个晚上+一个上午
 # 在batch_size=64,pred_len=5前提下，跑seq_len=336参数时，报错：
 # torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 8.53 GiB. GPU 0 has a total capacity of 6.00 GiB of which 0 bytes is free.
 # Of the allocated memory 6.19 GiB is allocated by PyTorch, and 566.26 MiB is reserved by PyTorch but unallocated.
@@ -144,7 +144,7 @@ print("用标准化后的数据")
 # 设置模型参数配置
 # 选择模型
 config.model = 'MPDLinear_SOTA'
-config.batch_size = 64 # 数据集有1825个样本。通常，对于小型数据集，较小的 batch_size 会更合适，如 16、32(cpu) 或 64,128(gpu)。这样可以更充分地利用数据并防止内存溢出
+config.batch_size = 32 # 数据集有1825个样本。通常，对于小型数据集，较小的 batch_size 会更合适，如 16、32(cpu) 或 64,128(gpu)。这样可以更充分地利用数据并防止内存溢出
 # seq_len选择
 # 常用起点: 可以从 30 天（一个月的时间序列数据）开始。这通常是一个合理的起点，既能捕捉短期趋势，又不会过长。
 # 根据模型调整: 如果在训练过程中发现模型表现良好，可以逐步增加 seq_len，例如增加到 60 天、90 天或 180 天，看看是否能进一步提升模型性能
