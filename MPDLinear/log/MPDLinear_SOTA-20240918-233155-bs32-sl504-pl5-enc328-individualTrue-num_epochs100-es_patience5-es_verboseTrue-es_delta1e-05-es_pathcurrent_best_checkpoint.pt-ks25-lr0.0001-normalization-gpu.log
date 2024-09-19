@@ -1,0 +1,138 @@
+2024-09-18 23:31:55,810 - 日志目录：/root/autodl-tmp/scorpioMock/MPDLinear/log
+2024-09-18 23:31:55,810 - 
+本次训练配置config:ModelConfig(model=MPDLinear_SOTA, batch_size=32, seq_len=504, enc_in=328, pred_len=5, individual=True, num_epochs=100,es_patience=5, es_verbose=True, es_delta=1e-05, es_path=current_best_checkpoint.pt,decomposition_kernel_size=25,learning_rate=0.0001,scaling_method=normalization,device=gpu)
+2024-09-18 23:39:00,091 - Epoch 1/100, Train Loss(MSE): 0.02222958421551211, Validation Loss(MSE): 0.0021293472870896903
+2024-09-18 23:39:00,092 - Validation loss decreased for the first time. Saving model ...
+2024-09-18 23:46:13,491 - Epoch 2/100, Train Loss(MSE): 0.001853312339720338, Validation Loss(MSE): 0.0014527904216119628
+2024-09-18 23:46:13,492 - Validation loss decreased (0.002129 --> 0.001453).  Saving model ...
+2024-09-18 23:53:23,073 - Epoch 3/100, Train Loss(MSE): 0.001505627955288388, Validation Loss(MSE): 0.0015006936169631871
+2024-09-18 23:53:23,075 - EarlyStopping counter: 1 out of 5
+2024-09-19 00:00:38,226 - Epoch 4/100, Train Loss(MSE): 0.0013106661321696386, Validation Loss(MSE): 0.0010936017759736443
+2024-09-19 00:00:38,228 - Validation loss decreased (0.001453 --> 0.001094).  Saving model ...
+2024-09-19 00:07:52,052 - Epoch 5/100, Train Loss(MSE): 0.0011923616232220517, Validation Loss(MSE): 0.0009740236639993748
+2024-09-19 00:07:52,053 - Validation loss decreased (0.001094 --> 0.000974).  Saving model ...
+2024-09-19 00:15:02,862 - Epoch 6/100, Train Loss(MSE): 0.0010880078037464342, Validation Loss(MSE): 0.0009748487284889927
+2024-09-19 00:15:02,862 - EarlyStopping counter: 1 out of 5
+2024-09-19 00:22:15,237 - Epoch 7/100, Train Loss(MSE): 0.0009711000562984814, Validation Loss(MSE): 0.0007438117891182134
+2024-09-19 00:22:15,238 - Validation loss decreased (0.000974 --> 0.000744).  Saving model ...
+2024-09-19 00:29:22,957 - Epoch 8/100, Train Loss(MSE): 0.0008513768412923629, Validation Loss(MSE): 0.0007005051237582746
+2024-09-19 00:29:22,958 - Validation loss decreased (0.000744 --> 0.000701).  Saving model ...
+2024-09-19 00:36:44,058 - Epoch 9/100, Train Loss(MSE): 0.0007635827573348386, Validation Loss(MSE): 0.0009192493780125163
+2024-09-19 00:36:44,059 - EarlyStopping counter: 1 out of 5
+2024-09-19 00:43:45,602 - Epoch 10/100, Train Loss(MSE): 0.000731467552367569, Validation Loss(MSE): 0.000653727812603415
+2024-09-19 00:43:45,603 - Validation loss decreased (0.000701 --> 0.000654).  Saving model ...
+2024-09-19 00:51:03,048 - Epoch 11/100, Train Loss(MSE): 0.0006695216738207396, Validation Loss(MSE): 0.0006042964387121668
+2024-09-19 00:51:03,049 - Validation loss decreased (0.000654 --> 0.000604).  Saving model ...
+2024-09-19 00:58:18,505 - Epoch 12/100, Train Loss(MSE): 0.0006139595610226772, Validation Loss(MSE): 0.0005755766264714852
+2024-09-19 00:58:18,505 - Validation loss decreased (0.000604 --> 0.000576).  Saving model ...
+2024-09-19 01:05:18,016 - Epoch 13/100, Train Loss(MSE): 0.0005952607854738716, Validation Loss(MSE): 0.00048098397221312753
+2024-09-19 01:05:18,017 - Validation loss decreased (0.000576 --> 0.000481).  Saving model ...
+2024-09-19 01:12:32,904 - Epoch 14/100, Train Loss(MSE): 0.0005404799656812535, Validation Loss(MSE): 0.0004964392678237255
+2024-09-19 01:12:32,904 - EarlyStopping counter: 1 out of 5
+2024-09-19 01:19:29,019 - Epoch 15/100, Train Loss(MSE): 0.0005267588089602862, Validation Loss(MSE): 0.0005292056615602363
+2024-09-19 01:19:29,020 - EarlyStopping counter: 2 out of 5
+2024-09-19 01:26:20,925 - Epoch 16/100, Train Loss(MSE): 0.0004966485566755597, Validation Loss(MSE): 0.0005328677825336517
+2024-09-19 01:26:20,926 - EarlyStopping counter: 3 out of 5
+2024-09-19 01:33:28,140 - Epoch 17/100, Train Loss(MSE): 0.00045871296103379525, Validation Loss(MSE): 0.0004364274306378017
+2024-09-19 01:33:28,141 - Validation loss decreased (0.000481 --> 0.000436).  Saving model ...
+2024-09-19 01:40:31,574 - Epoch 18/100, Train Loss(MSE): 0.0004265377745609875, Validation Loss(MSE): 0.0005087331303878238
+2024-09-19 01:40:31,576 - EarlyStopping counter: 1 out of 5
+2024-09-19 01:47:36,820 - Epoch 19/100, Train Loss(MSE): 0.0004012084775423819, Validation Loss(MSE): 0.00042768517677258287
+2024-09-19 01:47:36,821 - EarlyStopping counter: 2 out of 5
+2024-09-19 01:54:34,189 - Epoch 20/100, Train Loss(MSE): 0.00038242098016216775, Validation Loss(MSE): 0.00037584836482656774
+2024-09-19 01:54:34,190 - Validation loss decreased (0.000436 --> 0.000376).  Saving model ...
+2024-09-19 02:01:35,191 - Epoch 21/100, Train Loss(MSE): 0.00037556906382358354, Validation Loss(MSE): 0.0004006601641181695
+2024-09-19 02:01:35,193 - EarlyStopping counter: 1 out of 5
+2024-09-19 02:08:36,680 - Epoch 22/100, Train Loss(MSE): 0.00034275006127449894, Validation Loss(MSE): 0.0003992501649154741
+2024-09-19 02:08:36,681 - EarlyStopping counter: 2 out of 5
+2024-09-19 02:15:32,530 - Epoch 23/100, Train Loss(MSE): 0.00032225976402098816, Validation Loss(MSE): 0.0004027043780050367
+2024-09-19 02:15:32,532 - EarlyStopping counter: 3 out of 5
+2024-09-19 02:22:32,555 - Epoch 24/100, Train Loss(MSE): 0.00030652272854317993, Validation Loss(MSE): 0.00036019645631313324
+2024-09-19 02:22:32,557 - Validation loss decreased (0.000376 --> 0.000360).  Saving model ...
+2024-09-19 02:29:34,386 - Epoch 25/100, Train Loss(MSE): 0.0002874419215864451, Validation Loss(MSE): 0.0003200223461730567
+2024-09-19 02:29:34,387 - Validation loss decreased (0.000360 --> 0.000320).  Saving model ...
+2024-09-19 02:36:41,281 - Epoch 26/100, Train Loss(MSE): 0.00028297869892891987, Validation Loss(MSE): 0.0003347534687764207
+2024-09-19 02:36:41,281 - EarlyStopping counter: 1 out of 5
+2024-09-19 02:43:41,480 - Epoch 27/100, Train Loss(MSE): 0.00026841201104743536, Validation Loss(MSE): 0.00032533975684566905
+2024-09-19 02:43:41,480 - EarlyStopping counter: 2 out of 5
+2024-09-19 02:50:43,508 - Epoch 28/100, Train Loss(MSE): 0.0002473457889674708, Validation Loss(MSE): 0.0004019688492939796
+2024-09-19 02:50:43,509 - EarlyStopping counter: 3 out of 5
+2024-09-19 02:57:36,288 - Epoch 29/100, Train Loss(MSE): 0.00023648651287883752, Validation Loss(MSE): 0.00033608989583121403
+2024-09-19 02:57:36,288 - EarlyStopping counter: 4 out of 5
+2024-09-19 03:04:39,682 - Epoch 30/100, Train Loss(MSE): 0.000229427137036714, Validation Loss(MSE): 0.0003361067056287954
+2024-09-19 03:04:39,683 - EarlyStopping counter: 5 out of 5
+2024-09-19 03:04:39,683 - Early stopping
+2024-09-19 03:04:39,684 - 训练 30 次epoch，训练时长: 12763.87321805954 秒
+2024-09-19 03:04:40,603 - Model saved to /root/autodl-tmp/scorpioMock/MPDLinear/checkpoint/MPDLinear_SOTA_20240919-030440_bs32_seq504_enc328_pred_len5_individualTrue_checkpoint.pth
+2024-09-19 03:04:50,321 - Test Loss (normalization Scale) MSE: 0.00034135183630968203
+2024-09-19 03:04:50,321 - Test Loss (normalization Scale) MAE: 0.013160006039672427
+2024-09-19 03:04:59,997 - 测试集预测值和真实值数据存储：Predictions and True Values saved to /root/autodl-tmp/scorpioMock/MPDLinear/predict_data/predictions_vs_true_values(Original Scale)-MPDLinear_SOTA-electricity-20240919-030440-sl504_normalization.csv
+2024-09-19 03:04:59,997 - Test Loss (Original Scale) MSE: 12397.350244976591
+2024-09-19 03:04:59,998 - Test Loss (Original Scale) MAE: 79.3257258925327
+
+2024-09-19 03:05:00,022 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,023 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,024 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,024 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,024 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,027 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,027 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,028 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,035 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,036 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,036 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,037 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,037 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,038 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,039 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,040 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,041 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,042 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,043 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,046 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,047 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,049 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,050 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,051 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,052 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,055 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,107 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,108 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,108 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,109 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,109 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,111 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,111 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,113 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,113 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,114 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,114 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,115 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,115 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,116 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,117 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,185 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,185 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,186 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,187 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,188 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,189 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,192 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,194 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,195 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,196 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,197 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,199 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,244 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,245 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,245 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,247 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,248 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,249 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,249 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,250 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,250 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,251 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,251 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,252 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
+2024-09-19 03:05:00,252 - findfont: Generic family 'sans-serif' not found because none of the following families were found: SimHei
