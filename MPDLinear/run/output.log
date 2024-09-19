@@ -1,210 +1,0 @@
-nohup: ignoring input
-
-实验所选数据集的 数据集基础信息：
-<class 'pandas.core.frame.DataFrame'>
-RangeIndex: 26304 entries, 0 to 26303
-Columns: 329 entries, year to OT
-dtypes: UInt32(1), float64(321), int32(7)
-memory usage: 65.2 MB
-None
-
-实验所选数据集的 数据集前几行数据：
-   year  month  day  hour  day_of_week  ...   316   317     318    319      OT
-0  2016      7    1     2            4  ...  48.0  38.0  1558.0  182.0  2162.0
-1  2016      7    1     3            4  ...  65.0  47.0  2177.0  253.0  2835.0
-2  2016      7    1     4            4  ...  64.0  43.0  2193.0  218.0  2764.0
-3  2016      7    1     5            4  ...  65.0  39.0  1315.0  195.0  2735.0
-4  2016      7    1     6            4  ...  75.0  40.0  1378.0  191.0  2721.0
-
-[5 rows x 329 columns]
-
-查看 实验所选数据集的 数据缺失值情况：
-year           0
-month          0
-day            0
-hour           0
-day_of_week    0
-              ..
-316            0
-317            0
-318            0
-319            0
-OT             0
-Length: 329, dtype: int64
-/root/autodl-tmp/scorpioMock/MPDLinear/run/exp_electricity.py:89: FutureWarning: DataFrame.fillna with 'method' is deprecated and will raise in a future version. Use obj.ffill() or obj.bfill() instead.
-  dataset_exp.fillna(method='ffill', inplace=True)
-/root/autodl-tmp/scorpioMock/MPDLinear/run/exp_electricity.py:90: FutureWarning: DataFrame.fillna with 'method' is deprecated and will raise in a future version. Use obj.ffill() or obj.bfill() instead.
-  dataset_exp.fillna(method='bfill', inplace=True)
-
-插值/前向/后向填充后，实验所选数据集的缺失值情况：
-year           0
-month          0
-day            0
-hour           0
-day_of_week    0
-              ..
-316            0
-317            0
-318            0
-319            0
-OT             0
-Length: 329, dtype: int64
-已完成标准化 和 归一化，并已经存储标准化和归一化后的数据
-用标准化后的数据
------Using device: cuda-----
-在输入时间步长为:504的前提下，数据集形状：(26304, 329)，可以有:25800个batch
-特征数据形状: (25800, 165312),输入时间步:504 * 特征数:328 = 165312
-目标数据形状: (25800,)一共25800个batch，每个batch对应 1 列预测值
-训练集大小: (20640, 165312), (20640,)
-验证集大小: (2580, 165312), (2580,)
-测试集大小: (2580, 165312), (2580,)
-日志目录：/root/autodl-tmp/scorpioMock/MPDLinear/log
-模型训练前查看配置：
-ModelConfig(model=MPDLinear_SOTA, batch_size=32, seq_len=504, enc_in=328, pred_len=5, individual=True, num_epochs=100,es_patience=5, es_verbose=True, es_delta=1e-05, es_path=current_best_checkpoint.pt,decomposition_kernel_size=25,learning_rate=0.0001,scaling_method=normalization,device=gpu)
-Epochs:   0%|          | 0/100 [00:00<?, ?it/s]
-Training Epoch 1:   0%|          | 0/645 [00:00<?, ?it/s][A
-Training Epoch 1:   0%|          | 1/645 [00:00<10:38,  1.01it/s][A
-Training Epoch 1:   0%|          | 2/645 [00:01<09:15,  1.16it/s][A
-Training Epoch 1:   0%|          | 3/645 [00:02<08:09,  1.31it/s][A
-Training Epoch 1:   1%|          | 4/645 [00:03<07:27,  1.43it/s][A
-Training Epoch 1:   1%|          | 5/645 [00:03<07:06,  1.50it/s][A
-Training Epoch 1:   1%|          | 6/645 [00:04<06:53,  1.55it/s][A
-Training Epoch 1:   1%|          | 7/645 [00:04<06:41,  1.59it/s][A
-Training Epoch 1:   1%|          | 8/645 [00:05<06:33,  1.62it/s][A
-Training Epoch 1:   1%|▏         | 9/645 [00:06<06:30,  1.63it/s][A
-Training Epoch 1:   2%|▏         | 10/645 [00:06<06:24,  1.65it/s][A
-Training Epoch 1:   2%|▏         | 11/645 [00:07<06:22,  1.66it/s][A
-Training Epoch 1:   2%|▏         | 12/645 [00:07<06:20,  1.67it/s][A
-Training Epoch 1:   2%|▏         | 13/645 [00:08<06:21,  1.66it/s][A
-Training Epoch 1:   2%|▏         | 14/645 [00:09<06:21,  1.65it/s][A
-Training Epoch 1:   2%|▏         | 15/645 [00:09<06:20,  1.66it/s][A
-Training Epoch 1:   2%|▏         | 16/645 [00:10<06:19,  1.66it/s][A
-Training Epoch 1:   3%|▎         | 17/645 [00:10<06:18,  1.66it/s][A
-Training Epoch 1:   3%|▎         | 18/645 [00:11<06:20,  1.65it/s][A
-Training Epoch 1:   3%|▎         | 19/645 [00:12<06:24,  1.63it/s][A
-Training Epoch 1:   3%|▎         | 20/645 [00:12<06:29,  1.60it/s][A
-Training Epoch 1:   3%|▎         | 21/645 [00:13<06:28,  1.60it/s][A
-Training Epoch 1:   3%|▎         | 22/645 [00:13<06:28,  1.60it/s][A
-Training Epoch 1:   4%|▎         | 23/645 [00:14<06:21,  1.63it/s][A
-Training Epoch 1:   4%|▎         | 24/645 [00:15<06:17,  1.65it/s][A
-Training Epoch 1:   4%|▍         | 25/645 [00:15<06:16,  1.65it/s][A
-Training Epoch 1:   4%|▍         | 26/645 [00:16<06:14,  1.65it/s][A
-Training Epoch 1:   4%|▍         | 27/645 [00:16<06:16,  1.64it/s][A
-Training Epoch 1:   4%|▍         | 28/645 [00:17<06:16,  1.64it/s][A
-Training Epoch 1:   4%|▍         | 29/645 [00:18<06:17,  1.63it/s][A
-Training Epoch 1:   5%|▍         | 30/645 [00:18<06:22,  1.61it/s][A
-Training Epoch 1:   5%|▍         | 31/645 [00:19<06:21,  1.61it/s][A
-Training Epoch 1:   5%|▍         | 32/645 [00:20<06:17,  1.62it/s][A
-Training Epoch 1:   5%|▌         | 33/645 [00:20<06:14,  1.63it/s][A
-Training Epoch 1:   5%|▌         | 34/645 [00:21<06:13,  1.64it/s][A
-Training Epoch 1:   5%|▌         | 35/645 [00:21<06:09,  1.65it/s][A
-Training Epoch 1:   6%|▌         | 36/645 [00:22<06:07,  1.66it/s][A
-Training Epoch 1:   6%|▌         | 37/645 [00:23<06:07,  1.65it/s][A
-Training Epoch 1:   6%|▌         | 38/645 [00:23<06:07,  1.65it/s][A
-Training Epoch 1:   6%|▌         | 39/645 [00:24<06:05,  1.66it/s][A
-Training Epoch 1:   6%|▌         | 40/645 [00:24<06:05,  1.65it/s][A
-Training Epoch 1:   6%|▋         | 41/645 [00:25<06:07,  1.64it/s][A
-Training Epoch 1:   7%|▋         | 42/645 [00:26<06:06,  1.64it/s][A
-Training Epoch 1:   7%|▋         | 43/645 [00:26<06:13,  1.61it/s][A
-Training Epoch 1:   7%|▋         | 44/645 [00:27<06:20,  1.58it/s][A
-Training Epoch 1:   7%|▋         | 45/645 [00:28<06:20,  1.58it/s][A
-Training Epoch 1:   7%|▋         | 46/645 [00:28<06:16,  1.59it/s][A
-Training Epoch 1:   7%|▋         | 47/645 [00:29<06:13,  1.60it/s][A
-Training Epoch 1:   7%|▋         | 48/645 [00:29<06:09,  1.62it/s][A
-Training Epoch 1:   8%|▊         | 49/645 [00:30<06:04,  1.64it/s][A
-Training Epoch 1:   8%|▊         | 50/645 [00:31<06:01,  1.64it/s][A
-Training Epoch 1:   8%|▊         | 51/645 [00:31<06:01,  1.64it/s][A
-Training Epoch 1:   8%|▊         | 52/645 [00:32<06:01,  1.64it/s][A
-Training Epoch 1:   8%|▊         | 53/645 [00:32<05:58,  1.65it/s][A
-Training Epoch 1:   8%|▊         | 54/645 [00:33<05:56,  1.66it/s][A
-Training Epoch 1:   9%|▊         | 55/645 [00:34<05:56,  1.65it/s][A
-Training Epoch 1:   9%|▊         | 56/645 [00:34<05:54,  1.66it/s][A
-Training Epoch 1:   9%|▉         | 57/645 [00:35<05:53,  1.67it/s][A
-Training Epoch 1:   9%|▉         | 58/645 [00:35<05:55,  1.65it/s][A
-Training Epoch 1:   9%|▉         | 59/645 [00:36<05:58,  1.63it/s][A
-Training Epoch 1:   9%|▉         | 60/645 [00:37<06:00,  1.62it/s][A
-Training Epoch 1:   9%|▉         | 61/645 [00:37<06:08,  1.59it/s][A
-Training Epoch 1:  10%|▉         | 62/645 [00:38<06:09,  1.58it/s][A
-Training Epoch 1:  10%|▉         | 63/645 [00:39<06:06,  1.59it/s][A
-Training Epoch 1:  10%|▉         | 64/645 [00:39<06:01,  1.61it/s][A
-Training Epoch 1:  10%|█         | 65/645 [00:40<06:00,  1.61it/s][A
-Training Epoch 1:  10%|█         | 66/645 [00:40<06:04,  1.59it/s][A
-Training Epoch 1:  10%|█         | 67/645 [00:41<06:04,  1.59it/s][A
-Training Epoch 1:  11%|█         | 68/645 [00:42<06:07,  1.57it/s][A
-Training Epoch 1:  11%|█         | 69/645 [00:42<06:06,  1.57it/s][A
-Training Epoch 1:  11%|█         | 70/645 [00:43<06:05,  1.57it/s][A
-Training Epoch 1:  11%|█         | 71/645 [00:44<06:02,  1.58it/s][A
-Training Epoch 1:  11%|█         | 72/645 [00:44<05:58,  1.60it/s][A
-Training Epoch 1:  11%|█▏        | 73/645 [00:45<05:55,  1.61it/s][A
-Training Epoch 1:  11%|█▏        | 74/645 [00:45<05:53,  1.62it/s][A
-Training Epoch 1:  12%|█▏        | 75/645 [00:46<05:51,  1.62it/s][A
-Training Epoch 1:  12%|█▏        | 76/645 [00:47<05:50,  1.62it/s][A
-Training Epoch 1:  12%|█▏        | 77/645 [00:47<05:49,  1.63it/s][A
-Training Epoch 1:  12%|█▏        | 78/645 [00:48<05:50,  1.62it/s][A
-Training Epoch 1:  12%|█▏        | 79/645 [00:49<05:50,  1.62it/s][A
-Training Epoch 1:  12%|█▏        | 80/645 [00:49<05:49,  1.62it/s][A
-Training Epoch 1:  13%|█▎        | 81/645 [00:50<05:47,  1.62it/s][A
-Training Epoch 1:  13%|█▎        | 82/645 [00:50<05:50,  1.60it/s][A
-Training Epoch 1:  13%|█▎        | 83/645 [00:51<05:52,  1.59it/s][A
-Training Epoch 1:  13%|█▎        | 84/645 [00:52<05:52,  1.59it/s][A
-Training Epoch 1:  13%|█▎        | 85/645 [00:52<05:51,  1.59it/s][A
-Training Epoch 1:  13%|█▎        | 86/645 [00:53<05:51,  1.59it/s][A
-Training Epoch 1:  13%|█▎        | 87/645 [00:54<05:49,  1.60it/s][A
-Training Epoch 1:  14%|█▎        | 88/645 [00:54<05:52,  1.58it/s][A
-Training Epoch 1:  14%|█▍        | 89/645 [00:55<05:52,  1.58it/s][A
-Training Epoch 1:  14%|█▍        | 90/645 [00:56<06:33,  1.41it/s][A
-Training Epoch 1:  14%|█▍        | 91/645 [00:56<06:19,  1.46it/s][A
-Training Epoch 1:  14%|█▍        | 92/645 [00:57<06:07,  1.50it/s][A
-Training Epoch 1:  14%|█▍        | 93/645 [00:58<05:58,  1.54it/s][A
-Training Epoch 1:  15%|█▍        | 94/645 [00:58<05:51,  1.57it/s][A
-Training Epoch 1:  15%|█▍        | 95/645 [00:59<05:47,  1.58it/s][A
-Training Epoch 1:  15%|█▍        | 96/645 [00:59<05:43,  1.60it/s][A
-Training Epoch 1:  15%|█▌        | 97/645 [01:00<05:39,  1.61it/s][A
-Training Epoch 1:  15%|█▌        | 98/645 [01:01<05:38,  1.62it/s][A
-Training Epoch 1:  15%|█▌        | 99/645 [01:01<05:35,  1.63it/s][A
-Training Epoch 1:  16%|█▌        | 100/645 [01:02<05:34,  1.63it/s][A
-Training Epoch 1:  16%|█▌        | 101/645 [01:03<05:32,  1.63it/s][A
-Training Epoch 1:  16%|█▌        | 102/645 [01:03<05:33,  1.63it/s][A
-Training Epoch 1:  16%|█▌        | 103/645 [01:04<05:30,  1.64it/s][A
-Training Epoch 1:  16%|█▌        | 104/645 [01:04<05:28,  1.64it/s][A
-Training Epoch 1:  16%|█▋        | 105/645 [01:05<05:27,  1.65it/s][A
-Training Epoch 1:  16%|█▋        | 106/645 [01:06<05:25,  1.65it/s][A
-Training Epoch 1:  17%|█▋        | 107/645 [01:06<05:24,  1.66it/s][A
-Training Epoch 1:  17%|█▋        | 108/645 [01:07<05:25,  1.65it/s][A
-Training Epoch 1:  17%|█▋        | 109/645 [01:07<05:26,  1.64it/s][A
-Training Epoch 1:  17%|█▋        | 110/645 [01:08<05:26,  1.64it/s][A
-Training Epoch 1:  17%|█▋        | 111/645 [01:09<05:33,  1.60it/s][A
-Training Epoch 1:  17%|█▋        | 112/645 [01:09<05:33,  1.60it/s][A
-Training Epoch 1:  18%|█▊        | 113/645 [01:10<05:32,  1.60it/s][A
-Training Epoch 1:  18%|█▊        | 114/645 [01:10<05:28,  1.62it/s][A
-Training Epoch 1:  18%|█▊        | 115/645 [01:11<05:25,  1.63it/s][A
-Training Epoch 1:  18%|█▊        | 116/645 [01:12<05:24,  1.63it/s][A
-Training Epoch 1:  18%|█▊        | 117/645 [01:12<05:21,  1.64it/s][A
-Training Epoch 1:  18%|█▊        | 118/645 [01:13<05:21,  1.64it/s][A
-Training Epoch 1:  18%|█▊        | 119/645 [01:14<05:22,  1.63it/s][A
-Training Epoch 1:  19%|█▊        | 120/645 [01:14<05:20,  1.64it/s][A
-Training Epoch 1:  19%|█▉        | 121/645 [01:15<05:19,  1.64it/s][A
-Training Epoch 1:  19%|█▉        | 122/645 [01:15<05:19,  1.64it/s][A
-Training Epoch 1:  19%|█▉        | 123/645 [01:16<05:18,  1.64it/s][A
-Training Epoch 1:  19%|█▉        | 124/645 [01:17<05:18,  1.64it/s][A
-Training Epoch 1:  19%|█▉        | 125/645 [01:17<05:18,  1.63it/s][A
-Training Epoch 1:  20%|█▉        | 126/645 [01:18<05:26,  1.59it/s][A
-Training Epoch 1:  20%|█▉        | 127/645 [01:18<05:22,  1.61it/s][A
-Training Epoch 1:  20%|█▉        | 128/645 [01:19<05:20,  1.61it/s][A
-Training Epoch 1:  20%|██        | 129/645 [01:20<05:23,  1.59it/s][A
-Training Epoch 1:  20%|██        | 130/645 [01:20<05:18,  1.62it/s][A
-Training Epoch 1:  20%|██        | 131/645 [01:21<05:23,  1.59it/s][A
-Training Epoch 1:  20%|██        | 132/645 [01:22<05:21,  1.59it/s][A
-Training Epoch 1:  21%|██        | 133/645 [01:22<05:28,  1.56it/s][A
-Training Epoch 1:  21%|██        | 134/645 [01:23<05:25,  1.57it/s][A
-Training Epoch 1:  21%|██        | 135/645 [01:24<05:29,  1.55it/s][A
-Training Epoch 1:  21%|██        | 136/645 [01:24<05:42,  1.49it/s][A
-Training Epoch 1:  21%|██        | 137/645 [01:25<05:45,  1.47it/s][A
-Training Epoch 1:  21%|██▏       | 138/645 [01:26<05:47,  1.46it/s][A
-Training Epoch 1:  22%|██▏       | 139/645 [01:26<05:59,  1.41it/s][A
-Training Epoch 1:  22%|██▏       | 140/645 [01:27<05:58,  1.41it/s][A
-Training Epoch 1:  22%|██▏       | 141/645 [01:28<05:58,  1.41it/s][A
-Training Epoch 1:  22%|██▏       | 142/645 [01:29<06:00,  1.39it/s][A
-Training Epoch 1:  22%|██▏       | 143/645 [01:29<06:00,  1.39it/s][A
-Training Epoch 1:  22%|██▏       | 144/645 [01:30<05:56,  1.41it/s][A
-Training Epoch 1:  22%|██▏       | 145/645 [01:31<06:01,  1.38it/s][A
