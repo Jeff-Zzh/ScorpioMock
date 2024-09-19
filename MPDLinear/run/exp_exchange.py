@@ -132,7 +132,7 @@ config.seq_len = None # [1, 3, 5, 7, 30, 90, 180, 365, 730]
 config.pred_len = 5 # 1,3,5,7,10,30 数据集有 1825 个时间步，代表了按天采样5年的时间跨度。对于如此长时间的数据，如果 pred_len 设置得太大，模型可能难以学习到有效的长期依赖关系，因此需要谨慎选择。
 config.individual = True
 config.enc_in = len(selected_features) # 特征列数 = 通道数 = 328
-config.num_epochs = 100
+config.num_epochs = 500
 # EarlyStopping模块配置
 config.es_patience = 5 # 100 跑全epoch(晚上跑)
 config.es_verbose = True
@@ -140,7 +140,7 @@ config.es_delta = 0.00001
 config.es_path = 'current_best_checkpoint.pt'
 config.decomposition_kernel_size = 25
 config.learning_rate = 0.0001 # 0.001 -> 0.0001 -> 0.00001
-config.scaling_method = 'standardization' # 选择缩放方法 标准化/归一化 standardization/normalization
+config.scaling_method = 'normalization' # 选择缩放方法 标准化/归一化 standardization/normalization
 config.device = 'gpu'
 
 device = None # torch所用设备
