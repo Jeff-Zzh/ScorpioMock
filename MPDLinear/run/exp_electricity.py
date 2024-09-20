@@ -37,7 +37,7 @@ MPDLinear_SOTA在electricity数据集上不同输入seq_len的模型训练&预�
 # seq_len_list = [24, 48, 72, 96] # 先跑这4个seq_len的，因为如果一下子遍历所有的，估计得跑个1周的感觉，先看看这4个跑得跑多久, 大概4小时
 # seq_len_list = [120, 144, 168, 192]  # 跑了一个晚上+一个上午
 # seq_len_list = [336, 504, 672, 720]
-seq_len_list = [504, 672, 720] # 从504开始，bs=32，因为bs=64 3080Ti的12GB显存会报错CUDA OOM
+# seq_len_list = [504, 672, 720] # 从504开始，bs=32，因为bs=64 3080Ti的12GB显存会报错CUDA OOM
 # 在batch_size=64,pred_len=5前提下，跑seq_len=336参数时，报错：
 # torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 8.53 GiB. GPU 0 has a total capacity of 6.00 GiB of which 0 bytes is free.
 # Of the allocated memory 6.19 GiB is allocated by PyTorch, and 566.26 MiB is reserved by PyTorch but unallocated.
@@ -48,7 +48,7 @@ seq_len_list = [504, 672, 720] # 从504开始，bs=32，因为bs=64 3080Ti的12G
 # seq_len_list = [336] # batch_size = 32时可以
 # seq_len_list = [504] # batch_size = 32时，RAM运行内存不够报错，已调整window设置，提升系统虚拟内存了；还是不行，会CUDA OOM, 把batch_size设为16
 # seq_len_list = [672]
-# seq_len_list = [720]
+seq_len_list = [720]
 
 
 # 配置
