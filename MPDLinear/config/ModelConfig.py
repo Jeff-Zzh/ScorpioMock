@@ -15,6 +15,7 @@ class ModelConfig:
         self.learning_rate = 0.001
         self.scaling_method = 'standardization' # 缩放方法: 标准化/归一化
         self.device = 'cpu' # 模型训练是用cpu还是gpu(cuda) / torch.tensor张量数据，在cpu还是gpu(cuda)
+        self.dataset_name = '数据集名' # 当前训练跑的数据集名
 
 
     def __str__(self):
@@ -33,7 +34,8 @@ class ModelConfig:
                 f"decomposition_kernel_size={self.decomposition_kernel_size},"
                 f"learning_rate={self.learning_rate},"
                 f"scaling_method={self.scaling_method},"
-                f"device={self.device})")
+                f"device={self.device},"
+                f"dataset_name={self.dataset_name},)")
 
     # @property
     # def batch_size(self):

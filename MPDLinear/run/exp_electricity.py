@@ -47,8 +47,8 @@ MPDLinear_SOTA在electricity数据集上不同输入seq_len的模型训练&预�
 # 还是减小batch_size，我们先把batch_size从64降为32试一试，以下4个大seq_len的最好每个都单独跑，因为其占用的内存实在是太大了
 # seq_len_list = [336] # batch_size = 32时可以
 # seq_len_list = [504] # batch_size = 32时，RAM运行内存不够报错，已调整window设置，提升系统虚拟内存了；还是不行，会CUDA OOM, 把batch_size设为16
-# seq_len_list = [672]
-seq_len_list = [720]
+seq_len_list = [672, 720]
+# seq_len_list = [720]
 
 
 # 配置
@@ -239,9 +239,9 @@ for seq_len in seq_len_list:
     test_dataset = TensorDataset(X_test_tensor, y_test_tensor)
 
     # 创建数据集加载器
-    train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False)
-    test_loader = DataLoader(test_dataset, batch_size=config.batch_size, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True, num_workers=0) # 需要几个进程来一次性读取这个小批量数据,默认0，一般用0就够了，多了有时会出一些底层错误
+    val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False, num_workers=0)
+    test_loader = DataLoader(test_dataset, batch_size=config.batch_size, shuffle=False, num_workers=0)
 
     # 定义选取模型，并移动到 GPU 或 CPU
     model_dict = ModelDict().get_model_dict()
@@ -309,7 +309,7 @@ for seq_len in seq_len_list:
                 loss = criterion(outputs.squeeze(), targets) # 计算当前批次的损失 targets维度为[32]
             scaler.scale(loss).backward() # 使用 scaler 缩放损失并进行反向传播计算梯度，backward() 会自动计算出损失函数相对于所有可训练参数的梯度，并将这些梯度存储在每个参数的 grad 属性中
             # 使用 scaler 进行模型参数梯度更新
-            scaler.step(optimizer)
+            scaler.step(optimizer) # 权重/模型更新
             # 更新 scaler 状态
             scaler.update()
             train_loss += loss.item() # 累加当前批次的损失
