@@ -597,6 +597,165 @@ def feature_engineering_for_ettm1_and_save(ettm1_dataset):
 
     return ettm1_dataset
 
+def feature_engineering_for_etth2_and_save(etth2_dataset):
+    '''
+    9_LTSF_dataset 9大时间序列数据集中 电变压器小时级数据集数据集Etth2的定制特征工程，
+    主要做时间特征的提取，特征扩展feature_expand，从date列中，尽可能多的提取时序特征列
+    :param etth2_dataset:
+    :return:
+    '''
+    # 将 'date' 列转换为 datetime 类型
+    etth2_dataset['date'] = pd.to_datetime(etth2_dataset['date'])
+
+    # 提取年、月、日、小时等时间特征列
+    etth2_dataset['year'] = etth2_dataset['date'].dt.year
+    etth2_dataset['month'] = etth2_dataset['date'].dt.month
+    etth2_dataset['day'] = etth2_dataset['date'].dt.day
+    etth2_dataset['hour'] = etth2_dataset['date'].dt.hour
+    # electricity_dataset['minute'] = electricity_dataset['date'].dt.minute
+    etth2_dataset['day_of_week'] = etth2_dataset['date'].dt.dayofweek
+    etth2_dataset['day_of_year'] = etth2_dataset['date'].dt.dayofyear
+    etth2_dataset['week_of_year'] = etth2_dataset['date'].dt.isocalendar().week
+    etth2_dataset['quarter'] = etth2_dataset['date'].dt.quarter
+
+    # 将时间特征列移动到数据集最左边
+    time_features = etth2_dataset[['year', 'month', 'day', 'hour', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter']]
+    etth2_dataset = etth2_dataset.drop(columns=['date', 'year', 'month', 'day', 'hour', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter'])
+    etth2_dataset = pd.concat([time_features, etth2_dataset], axis=1)
+
+    # 存储
+    etth2_dataset.to_csv('../datasets/9_LTSF_dataset/processed/ETTh2_processed.csv', index=False)
+
+    return etth2_dataset
+
+def feature_engineering_for_ettm2_and_save(ettm2_dataset):
+    '''
+    9_LTSF_dataset 9大时间序列数据集中 电变压器小时级数据集数据集Ettm2的定制特征工程，
+    主要做时间特征的提取，特征扩展feature_expand，从date列中，尽可能多的提取时序特征列
+    :param ettm2_dataset:
+    :return:
+    '''
+    # 将 'date' 列转换为 datetime 类型
+    ettm2_dataset['date'] = pd.to_datetime(ettm2_dataset['date'])
+
+    # 提取年、月、日、小时等时间特征列
+    ettm2_dataset['year'] = ettm2_dataset['date'].dt.year
+    ettm2_dataset['month'] = ettm2_dataset['date'].dt.month
+    ettm2_dataset['day'] = ettm2_dataset['date'].dt.day
+    ettm2_dataset['hour'] = ettm2_dataset['date'].dt.hour
+    ettm2_dataset['minute'] = ettm2_dataset['date'].dt.minute
+    ettm2_dataset['minute_of_day'] = ettm2_dataset['date'].dt.hour * 60 + ettm2_dataset['date'].dt.minute
+    ettm2_dataset['day_of_week'] = ettm2_dataset['date'].dt.dayofweek
+    ettm2_dataset['day_of_year'] = ettm2_dataset['date'].dt.dayofyear
+    ettm2_dataset['week_of_year'] = ettm2_dataset['date'].dt.isocalendar().week
+    ettm2_dataset['quarter'] = ettm2_dataset['date'].dt.quarter
+
+    # 将时间特征列移动到数据集最左边
+    time_features = ettm2_dataset[['year', 'month', 'day', 'hour', 'minute', 'minute_of_day', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter']]
+    ettm2_dataset = ettm2_dataset.drop(columns=['date', 'year', 'month', 'day', 'hour', 'minute', 'minute_of_day', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter'])
+    ettm2_dataset = pd.concat([time_features, ettm2_dataset], axis=1)
+
+    # 存储
+    ettm2_dataset.to_csv('../datasets/9_LTSF_dataset/processed/ETTm2_processed.csv', index=False)
+
+    return ettm2_dataset
+
+def feature_engineering_for_national_illness_and_save(national_illness_dataset):
+    '''
+    9_LTSF_dataset 9大时间序列数据集中 流感疾病的患者与患者数量数据集national_illness(by week)的定制特征工程，
+    主要做时间特征的提取，特征扩展feature_expand，从date列中，尽可能多的提取时序特征列
+    :param national_illness_dataset:
+    :return:
+    '''
+    # 将 'date' 列转换为 datetime 类型
+    national_illness_dataset['date'] = pd.to_datetime(national_illness_dataset['date'])
+
+    # 提取年、月、日、小时等时间特征列
+    national_illness_dataset['year'] = national_illness_dataset['date'].dt.year
+    national_illness_dataset['month'] = national_illness_dataset['date'].dt.month
+    national_illness_dataset['day'] = national_illness_dataset['date'].dt.day
+    national_illness_dataset['hour'] = national_illness_dataset['date'].dt.hour
+    # national_illness_dataset['minute'] = national_illness_dataset['date'].dt.minute
+    # national_illness_dataset['minute_of_day'] = national_illness_dataset['date'].dt.hour * 60 + national_illness_dataset['date'].dt.minute
+    national_illness_dataset['day_of_week'] = national_illness_dataset['date'].dt.dayofweek
+    national_illness_dataset['day_of_year'] = national_illness_dataset['date'].dt.dayofyear
+    national_illness_dataset['week_of_year'] = national_illness_dataset['date'].dt.isocalendar().week
+    national_illness_dataset['quarter'] = national_illness_dataset['date'].dt.quarter
+
+    # 将时间特征列移动到数据集最左边
+    time_features = national_illness_dataset[['year', 'month', 'day', 'hour', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter']]
+    national_illness_dataset = national_illness_dataset.drop(columns=['date', 'year', 'month', 'day', 'hour', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter'])
+    national_illness_dataset = pd.concat([time_features, national_illness_dataset], axis=1)
+
+    # 存储
+    national_illness_dataset.to_csv('../datasets/9_LTSF_dataset/processed/national_illness_processed.csv', index=False)
+
+    return national_illness_dataset
+
+def feature_engineering_for_traffic_and_save(traffic_dataset):
+    '''
+    9_LTSF_dataset 9大时间序列数据集中 道路占用率traffic(by hour)的定制特征工程，主要做时间特征的提取，
+    特征扩展feature_expand，从date列中，尽可能多的提取时序特征列
+    :param traffic_dataset:
+    :return:
+    '''
+    # 将 'date' 列转换为 datetime 类型
+    traffic_dataset['date'] = pd.to_datetime(traffic_dataset['date'])
+
+    # 提取年、月、日、小时等时间特征列
+    traffic_dataset['year'] = traffic_dataset['date'].dt.year
+    traffic_dataset['month'] = traffic_dataset['date'].dt.month
+    traffic_dataset['day'] = traffic_dataset['date'].dt.day
+    traffic_dataset['hour'] = traffic_dataset['date'].dt.hour
+    # electricity_dataset['minute'] = electricity_dataset['date'].dt.minute
+    traffic_dataset['day_of_week'] = traffic_dataset['date'].dt.dayofweek
+    traffic_dataset['day_of_year'] = traffic_dataset['date'].dt.dayofyear
+    traffic_dataset['week_of_year'] = traffic_dataset['date'].dt.isocalendar().week
+    traffic_dataset['quarter'] = traffic_dataset['date'].dt.quarter
+
+    # 将时间特征列移动到数据集最左边
+    time_features = traffic_dataset[['year', 'month', 'day', 'hour', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter']]
+    traffic_dataset = traffic_dataset.drop(columns=['date', 'year', 'month', 'day', 'hour', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter'])
+    traffic_dataset = pd.concat([time_features, traffic_dataset], axis=1)
+
+    # 存储
+    traffic_dataset.to_csv('../datasets/9_LTSF_dataset/processed/traffic_processed.csv', index=False)
+
+    return traffic_dataset
+
+def feature_engineering_for_weather_and_save(weather_dataset):
+    '''
+    9_LTSF_dataset 9大时间序列数据集中 天气指标weather(by 10min)数据集的定制特征工程，
+    主要做时间特征的提取，特征扩展feature_expand，从date列中，尽可能多的提取时序特征列
+    :param weather_dataset:
+    :return:
+    '''
+    # 将 'date' 列转换为 datetime 类型
+    weather_dataset['date'] = pd.to_datetime(weather_dataset['date'])
+
+    # 提取年、月、日、小时等时间特征列
+    weather_dataset['year'] = weather_dataset['date'].dt.year
+    weather_dataset['month'] = weather_dataset['date'].dt.month
+    weather_dataset['day'] = weather_dataset['date'].dt.day
+    weather_dataset['hour'] = weather_dataset['date'].dt.hour
+    weather_dataset['minute'] = weather_dataset['date'].dt.minute
+    weather_dataset['minute_of_day'] = weather_dataset['date'].dt.hour * 60 + weather_dataset['date'].dt.minute
+    weather_dataset['day_of_week'] = weather_dataset['date'].dt.dayofweek
+    weather_dataset['day_of_year'] = weather_dataset['date'].dt.dayofyear
+    weather_dataset['week_of_year'] = weather_dataset['date'].dt.isocalendar().week
+    weather_dataset['quarter'] = weather_dataset['date'].dt.quarter
+
+    # 将时间特征列移动到数据集最左边
+    time_features = weather_dataset[['year', 'month', 'day', 'hour', 'minute', 'minute_of_day', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter']]
+    weather_dataset = weather_dataset.drop(columns=['date', 'year', 'month', 'day', 'hour', 'minute', 'minute_of_day', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter'])
+    weather_dataset = pd.concat([time_features, weather_dataset], axis=1)
+
+    # 存储
+    weather_dataset.to_csv('../datasets/9_LTSF_dataset/processed/weather_processed.csv', index=False)
+
+    return weather_dataset
+
+
 
 if __name__ == '__main__':
     pass
