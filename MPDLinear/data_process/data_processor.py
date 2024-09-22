@@ -565,6 +565,38 @@ def feature_engineering_for_etth1_and_save(etth1_dataset):
 
     return etth1_dataset
 
+def feature_engineering_for_ettm1_and_save(ettm1_dataset):
+    '''
+    9_LTSF_dataset 9大时间序列数据集中 电变压器小时级数据集数据集Ettm1的定制特征工程，
+    主要做时间特征的提取，特征扩展feature_expand，从date列中，尽可能多的提取时序特征列
+    :param ettm1_dataset:
+    :return:
+    '''
+    # 将 'date' 列转换为 datetime 类型
+    ettm1_dataset['date'] = pd.to_datetime(ettm1_dataset['date'])
+
+    # 提取年、月、日、小时等时间特征列
+    ettm1_dataset['year'] = ettm1_dataset['date'].dt.year
+    ettm1_dataset['month'] = ettm1_dataset['date'].dt.month
+    ettm1_dataset['day'] = ettm1_dataset['date'].dt.day
+    ettm1_dataset['hour'] = ettm1_dataset['date'].dt.hour
+    ettm1_dataset['minute'] = ettm1_dataset['date'].dt.minute
+    ettm1_dataset['minute_of_day'] = ettm1_dataset['date'].dt.hour * 60 + ettm1_dataset['date'].dt.minute
+    ettm1_dataset['day_of_week'] = ettm1_dataset['date'].dt.dayofweek
+    ettm1_dataset['day_of_year'] = ettm1_dataset['date'].dt.dayofyear
+    ettm1_dataset['week_of_year'] = ettm1_dataset['date'].dt.isocalendar().week
+    ettm1_dataset['quarter'] = ettm1_dataset['date'].dt.quarter
+
+    # 将时间特征列移动到数据集最左边
+    time_features = ettm1_dataset[['year', 'month', 'day', 'hour', 'minute', 'minute_of_day', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter']]
+    ettm1_dataset = ettm1_dataset.drop(columns=['date', 'year', 'month', 'day', 'hour', 'minute', 'minute_of_day', 'day_of_week', 'day_of_year', 'week_of_year', 'quarter'])
+    ettm1_dataset = pd.concat([time_features, ettm1_dataset], axis=1)
+
+    # 存储
+    ettm1_dataset.to_csv('../datasets/9_LTSF_dataset/processed/ETTm1_processed.csv', index=False)
+
+    return ettm1_dataset
+
 
 if __name__ == '__main__':
     pass
